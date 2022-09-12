@@ -1,0 +1,16 @@
+<map id="comservatory/Parser.hpp" name="comservatory/Parser.hpp">
+<area shape="rect" id="node1" title="Defines the Contents class for storing the CSV contents." alt="" coords="362,5,529,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,225,64,251"/>
+<area shape="rect" id="node3" title=" " alt="" coords="375,225,430,251"/>
+<area shape="rect" id="node4" title=" " alt="" coords="283,152,362,177"/>
+<area shape="rect" id="node5" title=" " alt="" coords="439,79,543,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="567,79,641,104"/>
+<area shape="rect" id="node7" title=" " alt="" coords="666,79,734,104"/>
+<area shape="rect" id="node8" title=" " alt="" coords="759,79,817,104"/>
+<area shape="rect" id="node9" title=" " alt="" coords="842,79,931,104"/>
+<area shape="rect" id="node10" href="$Field_8hpp.html" title="Defines the Field virtual class and concrete implementations." alt="" coords="181,152,256,177"/>
+<area shape="rect" id="node14" href="$Creator_8hpp.html" title="Defines the FieldCreator class and defaults." alt="" coords="225,79,313,104"/>
+<area shape="rect" id="node11" title=" " alt="" coords="281,225,351,251"/>
+<area shape="rect" id="node12" title=" " alt="" coords="89,225,157,251"/>
+<area shape="rect" id="node13" href="$Type_8hpp.html" title="Defines the Type enumeration for field types." alt="" coords="181,225,256,251"/>
+</map>

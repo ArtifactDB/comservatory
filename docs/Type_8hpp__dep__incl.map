@@ -1,0 +1,8 @@
+<map id="comservatory/Type.hpp" name="comservatory/Type.hpp">
+<area shape="rect" id="node1" title="Defines the Type enumeration for field types." alt="" coords="135,5,291,31"/>
+<area shape="rect" id="node2" href="$Field_8hpp.html" title="Defines the Field virtual class and concrete implementations." alt="" coords="135,79,291,104"/>
+<area shape="rect" id="node3" href="$Creator_8hpp.html" title="Defines the FieldCreator class and defaults." alt="" coords="5,152,176,177"/>
+<area shape="rect" id="node4" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="59,225,226,251"/>
+<area shape="rect" id="node5" href="$ReadCsv_8hpp.html" title="Implements user&#45;visible functions for loading a CSV file." alt="" coords="112,299,293,324"/>
+<area shape="rect" id="node6" href="$comservatory_8hpp.html" title="Entrypoint header for the comservatory library." alt="" coords="99,372,306,397"/>
+</map>

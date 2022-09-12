@@ -1,0 +1,5 @@
+<map id="comservatory::DummyField&lt; T, tt &gt;" name="comservatory::DummyField&lt; T, tt &gt;">
+<area shape="rect" id="node1" title="Template class for a typed dummy field that only pretends to store its values." alt="" coords="5,167,184,207"/>
+<area shape="rect" id="node2" href="$structcomservatory_1_1TypedField.html" title="Template class for a field of a known type." alt="" coords="10,79,179,119"/>
+<area shape="rect" id="node3" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="27,5,162,31"/>
+</map>
