@@ -1,5 +1,9 @@
 # Strict CSV validation and loading
 
+![Unit tests](https://github.com/LTLA/comservatory/actions/workflows/run-tests.yaml/badge.svg)
+![Documentation](https://github.com/LTLA/comservatory/actions/workflows/doxygenate.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/LTLA/comservatory/branch/master/graph/badge.svg?token=J3dxS3MtT1)](https://codecov.io/gh/LTLA/comservatory)
+
 ## Overview
 
 The comma separated value (CSV) format uses a tabular layout where each record starts on a new line and fields are separated by commas.

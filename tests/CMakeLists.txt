@@ -38,6 +38,11 @@ if(ZLIB_FOUND)
     target_sources(libtest PRIVATE src/GzipReader.cpp)
 endif() 
 
+set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing")
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(libtest PRIVATE -O0 -g --coverage)
+    target_link_options(libtest PRIVATE --coverage)
+endif()
+
 include(GoogleTest)
 gtest_discover_tests(libtest)
-add_test(NAME comservatory_test COMMAND libtest)
