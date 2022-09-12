@@ -184,32 +184,32 @@ struct DummyField : public TypedField<T, tt> {
 /** Various realizations. **/
 
 /**
- * @brief Virtual class for a `Field` of strings.
+ * Virtual class for a `Field` of strings.
  */
 typedef TypedField<std::string, STRING> StringField;
 
 /**
- * @brief A string `Field` with a backing `std::vector<std::string>`.
+ * String `Field` with a backing `std::vector<std::string>`.
  */
 typedef FilledField<std::string, STRING> FilledStringField;
 
 /**
- * @brief A dummy string `Field`.
+ * Dummy string `Field`.
  */
 typedef DummyField<std::string, STRING> DummyStringField;
 
 /**
- * @brief Virtual class for a `Field` of double-precision numbers.
+ * Virtual class for a `Field` of double-precision numbers.
  */
 typedef TypedField<double, NUMBER> NumberField;
 
 /**
- * @brief A numeric `Field` with a backing `std::vector<double>`.
+ * Numeric `Field` with a backing `std::vector<double>`.
  */
 typedef FilledField<double, NUMBER> FilledNumberField;
 
 /**
- * @brief A dummy numeric `Field`.
+ * Dummy numeric `Field`.
  */
 typedef DummyField<double, NUMBER> DummyNumberField;
 
@@ -219,27 +219,27 @@ typedef DummyField<double, NUMBER> DummyNumberField;
 typedef TypedField<char, BOOLEAN> BooleanField;
 
 /**
- * @brief A boolean `Field` with a backing `std::vector<char>`.
+ * Boolean `Field` with a backing `std::vector<char>`.
  */
 typedef FilledField<char, BOOLEAN> FilledBooleanField;
 
 /**
- * @brief A dummy boolean `Field`.
+ * Dummy boolean `Field`.
  */
 typedef DummyField<char, BOOLEAN> DummyBooleanField;
 
 /**
- * @brief Virtual class for a `Field` of complex numbers.
+ * Virtual class for a `Field` of complex numbers.
  */
 typedef TypedField<std::complex<double>, COMPLEX> ComplexField;
 
 /**
- * @brief A complex `Field` with a backing `std::vector<std::complex<double> >`.
+ * Complex `Field` with a backing `std::vector<std::complex<double> >`.
  */
 typedef FilledField<std::complex<double>, COMPLEX> FilledComplexField;
 
 /**
- * @brief A dummy complex `Field`.
+ * Complex `Field`.
  */
 typedef DummyField<std::complex<double>, COMPLEX> DummyComplexField;
 

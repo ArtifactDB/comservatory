@@ -203,7 +203,7 @@ reader.validate_only = true;
 auto dummy_contents = reader.read(path); // throws error for invalid formats.
 ```
 
-See the [reference documentation](https://ltlta.github.io/comservatory) for more details.
+See the [reference documentation](https://ltla.github.io/comservatory) for more details.
 
 ### Building projects 
 

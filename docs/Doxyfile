@@ -793,7 +793,9 @@ WARN_LOGFILE           =
 INPUT                  = ../include/comservatory/Field.hpp \
                          ../include/comservatory/Type.hpp \
                          ../include/comservatory/Parser.hpp \
-                         ../include/comservatory/load.hpp \
+                         ../include/comservatory/Creator.hpp \
+                         ../include/comservatory/ReadCsv.hpp \
+                         ../include/comservatory/comservatory.hpp \
                          ../README.md
 
 # This tag can be used to specify the character encoding of the source files

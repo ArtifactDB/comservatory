@@ -5,6 +5,12 @@
 
 #include "Field.hpp"
 
+/**
+ * @file Creator.hpp
+ *
+ * @brief Defines the `FieldCreator` class and defaults.
+ */
+
 namespace comservatory {
 
 /**
