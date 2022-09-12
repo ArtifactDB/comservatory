@@ -74,7 +74,8 @@ $(function() {
   <div class="headertitle"><div class="title">Strict CSV validation and loading </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md__github_workspace_README"></a> </p><h1>Overview</h1>
+<div class="textblock"><p ><a class="anchor" id="md__github_workspace_README"></a> <img src="https://github.com/LTLA/comservatory/actions/workflows/run-tests.yaml/badge.svg" alt="Unit tests" style="pointer-events: none;" class="inline"/> <img src="https://github.com/LTLA/comservatory/actions/workflows/doxygenate.yaml/badge.svg" alt="Documentation" style="pointer-events: none;" class="inline"/> <a href="https://codecov.io/gh/LTLA/comservatory"><img src="https://codecov.io/gh/LTLA/comservatory/branch/master/graph/badge.svg?token=J3dxS3MtT1" alt="codecov" style="pointer-events: none;" class="inline"/></a></p>
+<h1>Overview</h1>
 <p >The comma separated value (CSV) format uses a tabular layout where each record starts on a new line and fields are separated by commas. Beyond this, though, there is little standardization on the specifics of how the fields are interpreted. The <b>comservatory</b> library defines an opinionated version of a "CSV standard" and provides a header-only C++ library to validate and load a CSV file. It is primarily intended for use in data management applications that write CSV files and want to provide some structural guarantees for downstream users.</p>
 <h1>Standard definition</h1>
 <h2>General</h2>
@@ -166,7 +167,7 @@ $(function() {
 <div class="fragment"><div class="line">comservatory::ReadCsv reader;</div>
 <div class="line">reader.validate_only = true;</div>
 <div class="line">auto dummy_contents = reader.read(path); // throws error for invalid formats.</div>
-</div><!-- fragment --><p >See the <a href="https://ltlta.github.io/comservatory">reference documentation</a> for more details.</p>
+</div><!-- fragment --><p >See the <a href="https://ltla.github.io/comservatory">reference documentation</a> for more details.</p>
 <h2>Building projects</h2>
 <p >If you're using CMake, you just need to add something like this to your <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
