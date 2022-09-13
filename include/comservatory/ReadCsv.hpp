@@ -21,6 +21,9 @@
 
 namespace comservatory {
 
+/**
+ * @brief Read the contents of CSV files into memory.
+ */
 class ReadCsv {
 public:
     /**
@@ -38,7 +41,7 @@ public:
      * Pointer to an instance of a concrete `FieldCreator` subclass.
      * If `NULL`, it defaults to an instance of an internal subclass that creates `FilledField` objects (or `DummyField`, if `dummy = true` in the `FieldCreator::create()` calls).
      */
-    FieldCreator* creator = nullptr; 
+    const FieldCreator* creator = nullptr; 
 
     /**
      * Whether to keep only a subset of fields.
@@ -113,7 +116,7 @@ public:
      * Gzip support requires the `COMSERVATORY_USE_ZLIB` macro to be defined,
      * and for the library to be linked against Zlib.
      */
-    Contents read(const char* path) {
+    Contents read(const char* path) const {
 #ifdef COMSERVATORY_USE_ZLIB
         byteme::SomeFileReader reader(path);
 #else
@@ -130,7 +133,7 @@ public:
      * Gzip support requires the `COMSERVATORY_USE_ZLIB` macro to be defined,
      * and for the library to be linked against Zlib.
      */
-    Contents read(std::string path) {
+    Contents read(std::string path) const {
         return read(path.c_str());
     } 
 };

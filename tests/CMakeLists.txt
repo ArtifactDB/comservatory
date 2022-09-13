@@ -38,6 +38,12 @@ if(ZLIB_FOUND)
     target_sources(libtest PRIVATE src/GzipReader.cpp)
 endif() 
 
+include(CheckIncludeFiles)
+check_include_files(filesystem HAVE_CXX_FS)
+if (NOT HAVE_CXX_FS) 
+    target_link_libraries(libtest stdc++fs) 
+endif()
+
 set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing")
 if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(libtest PRIVATE -O0 -g --coverage)
