@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['names_0',['names',['../structcomservatory_1_1Contents.html#a6385b72b3636ceda4d8859bcd76e86c8',1,'comservatory::Contents']]]
+  ['fields_0',['fields',['../structcomservatory_1_1Contents.html#a00f549399b320d8431c1265bed8ee360',1,'comservatory::Contents']]]
 ];
