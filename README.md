@@ -42,7 +42,7 @@ b",4
 ```
 
 The first line(s) of the file should contain a header that defines the names of the columns.
-Each name should follow the format described for `String`s.
+Each name should follow the format described for `String`s and should be unique across all columns.
 Again, the header line is allowed to span multiple lines if its entries contain newlines.
 For example, a header of `["aasdas", "qwert,asdas", "voo\ndasdsd"]` would look like:
 
