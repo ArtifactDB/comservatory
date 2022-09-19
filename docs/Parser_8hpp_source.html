@@ -324,50 +324,56 @@ $(function() {
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                    ok = reader(); </div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                });</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                parse_loop(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(holding.data()), n, info);</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                runner.join();</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            }</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>            <span class="keywordtype">bool</span> ok = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            <span class="keywordflow">while</span> (ok) {</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                ok = reader();</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                <span class="keywordtype">size_t</span> n = reader.available();</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                <span class="keyword">auto</span> ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(reader.buffer());</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                parse_loop(ptr, n, info);</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            }</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        }</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    }</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordtype">void</span> finish() {</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="comment">// If we didn&#39;t end on a newline, then field_counter &gt; 0 (if more fields</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        <span class="comment">// were added) or the buffer is non-empty (if we&#39;re caught in the middle</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="comment">// of adding a new first field). </span></div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        <span class="keywordflow">if</span> (field_counter != 0 || buffer.size()) {</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>            <span class="keywordflow">if</span> (on_string &amp;&amp; !on_quote) {</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;string not terminated by a double quote&quot;</span>);</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;last record must be terminated by a single newline&quot;</span>);</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>            }</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        }</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    }</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="keywordtype">bool</span> on_header = <span class="keyword">true</span>; </div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    <span class="keywordtype">bool</span> on_string = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="keywordtype">bool</span> on_quote = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    std::vector&lt;char&gt; buffer;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                    parse_loop(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(holding.data()), n, info);</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                } <span class="keywordflow">catch</span> (std::exception&amp; e) {</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                    runner.join();</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                    <span class="keywordflow">throw</span>;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                }</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                runner.join();</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            }</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            <span class="keywordtype">bool</span> ok = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            <span class="keywordflow">while</span> (ok) {</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                ok = reader();</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                <span class="keywordtype">size_t</span> n = reader.available();</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>                <span class="keyword">auto</span> ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(reader.buffer());</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>                parse_loop(ptr, n, info);</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            }</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        }</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    }</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="keywordtype">void</span> finish() {</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="comment">// If we didn&#39;t end on a newline, then field_counter &gt; 0 (if more fields</span></div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        <span class="comment">// were added) or the buffer is non-empty (if we&#39;re caught in the middle</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="comment">// of adding a new first field). </span></div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordflow">if</span> (field_counter != 0 || buffer.size()) {</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>            <span class="keywordflow">if</span> (on_string &amp;&amp; !on_quote) {</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>                <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;string not terminated by a double quote&quot;</span>);</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;last record must be terminated by a single newline&quot;</span>);</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            }</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        }</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    }</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keywordtype">int</span> field_counter = 0;</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keyword">const</span> FieldCreator* creator;</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordtype">bool</span> check_store = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    std::unordered_set&lt;std::string&gt; to_store_by_name;</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    std::unordered_set&lt;size_t&gt; to_store_by_index;</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>};</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>}</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keywordtype">bool</span> on_header = <span class="keyword">true</span>; </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keywordtype">bool</span> on_string = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordtype">bool</span> on_quote = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    std::vector&lt;char&gt; buffer;</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="keywordtype">int</span> field_counter = 0;</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    <span class="keyword">const</span> FieldCreator* creator;</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="keywordtype">bool</span> check_store = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    std::unordered_set&lt;std::string&gt; to_store_by_name;</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    std::unordered_set&lt;size_t&gt; to_store_by_index;</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>};</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>}</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aCreator_8hpp_html"><div class="ttname"><a href="Creator_8hpp.html">Creator.hpp</a></div><div class="ttdoc">Defines the FieldCreator class and defaults.</div></div>
 <div class="ttc" id="aField_8hpp_html"><div class="ttname"><a href="Field_8hpp.html">Field.hpp</a></div><div class="ttdoc">Defines the Field virtual class and concrete implementations.</div></div>
 <div class="ttc" id="anamespacecomservatory_html"><div class="ttname"><a href="namespacecomservatory.html">comservatory</a></div><div class="ttdoc">Contains all comservatory functions and classes.</div><div class="ttdef"><b>Definition:</b> Field.hpp:16</div></div>

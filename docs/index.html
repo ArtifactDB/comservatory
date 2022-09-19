@@ -89,7 +89,7 @@ $(function() {
 <p >Each record should start on a newline but may span multiple lines if a <code>String</code> field contains an entry with a newline. For example, a record containing <code>[1, 2, "a\nb", 4]</code> would be formatted as:</p>
 <div class="fragment"><div class="line">1,2,&quot;a</div>
 <div class="line">b&quot;,4</div>
-</div><!-- fragment --><p >The first line(s) of the file should contain a header that defines the names of the columns. Each name should follow the format described for <code>String</code>s. Again, the header line is allowed to span multiple lines if its entries contain newlines. For example, a header of <code>["aasdas", "qwert,asdas", "voo\ndasdsd"]</code> would look like:</p>
+</div><!-- fragment --><p >The first line(s) of the file should contain a header that defines the names of the columns. Each name should follow the format described for <code>String</code>s and should be unique across all columns. Again, the header line is allowed to span multiple lines if its entries contain newlines. For example, a header of <code>["aasdas", "qwert,asdas", "voo\ndasdsd"]</code> would look like:</p>
 <div class="fragment"><div class="line">&quot;aasdas&quot;,&quot;qwert,asdas&quot;,&quot;voo</div>
 <div class="line">dasdsd&quot;</div>
 </div><!-- fragment --><p >The last line of the file should be terminated with a newline.</p>
