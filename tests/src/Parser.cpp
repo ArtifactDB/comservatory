@@ -344,6 +344,25 @@ TEST(LoadTest, Failures) {
     }
 }
 
+TEST(LoadTest, ParallelFailures) {
+    {
+        std::string x = "\"aaron\",\"britney\",\"aaron\"\n1,2,3\n";
+        byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+        comservatory::ReadCsv parser;
+        parser.parallel = true;
+
+        EXPECT_ANY_THROW({
+            try {
+                parser.read(reader);
+            } catch (std::exception& e) {
+                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("duplicated header"));
+                throw;
+            }
+        });
+    }
+}
+
 TEST(LoadTest, CustomCreator) {
     comservatory::DefaultFieldCreator<true> validator;
     comservatory::ReadCsv foo;

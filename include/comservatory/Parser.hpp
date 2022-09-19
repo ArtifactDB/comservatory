@@ -276,7 +276,13 @@ public:
                     ok = reader(); 
                 });
 
-                parse_loop(reinterpret_cast<const char*>(holding.data()), n, info);
+                try {
+                    parse_loop(reinterpret_cast<const char*>(holding.data()), n, info);
+                } catch (std::exception& e) {
+                    runner.join();
+                    throw;
+                }
+
                 runner.join();
             }
 
