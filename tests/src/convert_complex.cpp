@@ -1,81 +1,61 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
 #include "comservatory/convert.hpp"
+#include "utils.h"
+
+std::complex<double> convert_to_complex(std::string x) {
+    x = "\"foo\"\n" + x + "\n";
+    byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
+    comservatory::ReadCsv parser;
+
+    auto output = parser.read(reader);
+    EXPECT_EQ(output.fields.size(), 1);
+    EXPECT_EQ(output.fields[0]->type(), comservatory::COMPLEX);
+
+    const auto& v = static_cast<const comservatory::FilledComplexField*>(output.fields[0].get())->values;
+    EXPECT_EQ(v.size(), 1);
+    return v[0];
+}
 
 TEST(ConvertTest, Complex) {
     {
-        std::string x = "1.2+1.3i";
-        auto out = comservatory::to_complex(x.c_str(), x.size());
+        auto out = convert_to_complex("1.2+1.3i");
         EXPECT_EQ(out.real(), 1.2);
         EXPECT_EQ(out.imag(), 1.3);
     }
 
     {
-        std::string x = "1.2-2e4i";
-        auto out = comservatory::to_complex(x.c_str(), x.size());
+        auto out = convert_to_complex("1+1i");
+        EXPECT_EQ(out.real(), 1);
+        EXPECT_EQ(out.imag(), 1);
+    }
+
+    {
+        auto out = convert_to_complex("1.2-2e4i");
         EXPECT_EQ(out.real(), 1.2);
         EXPECT_EQ(out.imag(), -2e4);
     }
 
     {
-        std::string x = "-9.2e3-7.6i";
-        auto out = comservatory::to_complex(x.c_str(), x.size());
+        auto out = convert_to_complex("0+0i");
+        EXPECT_EQ(out.real(), 0);
+        EXPECT_EQ(out.imag(), 0);
+    }
+
+    {
+        auto out = convert_to_complex("-9.2e3-7.6i");
         EXPECT_EQ(out.real(), -9.2e3);
         EXPECT_EQ(out.imag(), -7.6);
     }
 }
 
 TEST(ConvertTest, ComplexFail) {
-    {
-        std::string x = "1";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_complex(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                std::string msg(e.what());
-                EXPECT_THAT(msg, ::testing::HasSubstr("last character"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "1i";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_complex(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                std::string msg(e.what());
-                EXPECT_THAT(msg, ::testing::HasSubstr("could not find separator"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "++1i";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_complex(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                std::string msg(e.what());
-                EXPECT_THAT(msg, ::testing::HasSubstr("failed to parse the real part"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "1+i";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_complex(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                std::string msg(e.what());
-                EXPECT_THAT(msg, ::testing::HasSubstr("failed to parse the imaginary part"));
-                throw;
-            }
-        });
-    }
+    simple_conversion_fail("1+", "truncated complex number");
+    simple_conversion_fail("1+\n", "incorrectly formatted complex number");
+    simple_conversion_fail("1+i", "incorrectly formatted complex number");
+    simple_conversion_fail("1i", "incorrectly formatted number");
+    simple_conversion_fail("21+i", "incorrectly formatted complex number");
+    simple_conversion_fail("21+5a", "invalid number containing 'a'");
+    simple_conversion_fail("21+5,", "incorrectly formatted complex number");
 }
-
