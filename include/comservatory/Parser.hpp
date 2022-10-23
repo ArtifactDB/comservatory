@@ -153,32 +153,38 @@ private:
     void store_na_or_nan(Input& input, Contents& info, size_t column, size_t line) const {
         // Some shenanigans required here to distinguish between
         // NAN/NaN/etc. and NA, given that both are allowed.
-        if (!input.valid()) {
-            throw std::runtime_error("truncated field in " + get_location(column, line));
-        }
         input.advance();
+        if (!input.valid()) {
+            throw std::runtime_error("truncated keyword in " + get_location(column, line));
+        }
 
         char second = input.get();
         bool is_missing = true;
         if (second == 'a') {
             is_missing = false;
         } else if (second != 'A') {
-            throw std::runtime_error("unknown value in " + get_location(column, line));
+            throw std::runtime_error("unknown keyword in " + get_location(column, line));
         }
 
-        if (!input.valid()) {
-            throw std::runtime_error("truncated field in " + get_location(column, line));
-        }
         input.advance();
+        if (!input.valid()) {
+            if (is_missing) {
+                throw std::runtime_error("line " + std::to_string(line + 1) + " should terminate with a newline");
+            } else {
+                throw std::runtime_error("truncated keyword in " + get_location(column, line));
+            }
+        }
 
         char next = input.get();
         if (next == 'n' || next == 'N') {
             auto* current = check_column_type(info, NUMBER, column, line);
             static_cast<NumberField*>(current)->push_back(std::numeric_limits<double>::quiet_NaN());
             input.advance(); // for consistency with the NA case, in the sense that we are always past the keyword regardless of whether the keyword is NaN or NA.
-        } else {
+        } else if (is_missing) {
             auto raw = fetch_column(info, column, line);
             raw->add_missing();
+        } else {
+            throw std::runtime_error("unknown keyword in " + get_location(column, line));
         }
     }
 

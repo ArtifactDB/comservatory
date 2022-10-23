@@ -102,4 +102,10 @@ TEST(ConvertTest, NumberFail) {
     simple_conversion_fail("1e+0", "should be terminated with a newline");
     simple_conversion_fail("1e+1a", "invalid exponent containing 'a'");
     simple_conversion_fail("2e1.1", "invalid exponent containing '.'");
+
+    simple_conversion_fail("N", "truncated keyword");
+    simple_conversion_fail("Nt", "unknown keyword");
+    simple_conversion_fail("NA", "should terminate with a newline");
+    simple_conversion_fail("Na", "truncated keyword");
+    simple_conversion_fail("Na\n", "unknown keyword");
 }
