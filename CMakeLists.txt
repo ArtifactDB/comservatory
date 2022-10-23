@@ -11,6 +11,8 @@ target_include_directories(comservatory INTERFACE include/)
 
 add_subdirectory(extern)
 
+target_link_libraries(comservatory INTERFACE byteme)
+
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
     if(BUILD_TESTING)
