@@ -239,109 +239,14 @@ TEST(LoadTest, DummyByIndex) {
 }
 
 TEST(LoadTest, Failures) {
-    {
-        std::string x = "\"aaron\",\"britney\",\"aaron\"\n1,2,3\n";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-            load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("duplicated header"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2\n";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-            load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("fewer fields"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2,3,4\n";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-            load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("more fields"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2,3\nTRUE,3,4\n";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-            load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("previous and current types"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2,3\n3\"asd,3,4\n";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-            load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("encountered quote"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n4,3,\"asdasd\n";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-                load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("not terminated by a double quote"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n\n4,3,\"asdasd\"";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-                load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("empty line"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n4,3,\"asdasd\"";
-        byteme::RawBufferReader reader(raw_bytes(x), x.size());
-        EXPECT_ANY_THROW({
-            try {
-                load_simple(reader);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("terminated by a single"));
-                throw;
-            }
-        });
-    }
+    parse_fail("\"aaron\",\"britney\",\"aaron\"\n1,2,3\n", "duplicated header");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2\n", "fewer fields");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,3,4\n", "more fields");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,3\nTRUE,3,4\n", "previous and current types");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,3\n3\"asd,3,4\n", "invalid number containing '\"'");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n4,3,\"asdasd\n", "truncated string");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n\n4,3,\"asdasd\"\n", "is empty");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,\n4,3,4\n", "is empty");
 }
 
 TEST(LoadTest, CustomCreator) {

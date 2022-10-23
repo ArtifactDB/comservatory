@@ -1,272 +1,105 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "comservatory/convert.hpp"
+
+#include "byteme/RawBufferReader.hpp"
+#include "comservatory/ReadCsv.hpp"
+
+#include "utils.h"
+
+double convert_to_number(std::string x) {
+    x = "\"foo\"\n" + x + "\n";
+    byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
+    comservatory::ReadCsv parser;
+
+    auto output = parser.read(reader);
+    EXPECT_EQ(output.fields.size(), 1);
+    EXPECT_EQ(output.fields[0]->type(), comservatory::NUMBER);
+
+    const auto& v = static_cast<const comservatory::FilledNumberField*>(output.fields[0].get())->values;
+    EXPECT_EQ(v.size(), 1);
+    return v[0];
+}
 
 TEST(ConvertTest, Integer) {
     // Basic example.
-    {
-        std::string x = "12345";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 12345);
-    }
-
-    {
-        std::string x = "+12345";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 12345);
-    }
-
-    {
-        std::string x = "-12345";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), -12345);
-    }
+    EXPECT_EQ(convert_to_number("12345"), 12345);
+    EXPECT_EQ(convert_to_number("+12345"), 12345);
+    EXPECT_EQ(convert_to_number("-12345"), -12345);
 
     // Works with zeros.
-    {
-        std::string x = "0";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 0);
-    }
-
-    {
-        std::string x = "+0";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 0);
-    }
-
-    {
-        std::string x = "-0";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 0);
-    }
+    EXPECT_EQ(convert_to_number("0"), 0);
+    EXPECT_EQ(convert_to_number("+0"), 0);
+    EXPECT_EQ(convert_to_number("-0"), 0);
 
     // Works with leading zeros.
-    {
-        std::string x = "-01";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), -1);
-    }
-
-    {
-        std::string x = "+01";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 1);
-    }
-
-    {
-        std::string x = "01";
-        EXPECT_EQ(comservatory::to_number(x.c_str(), x.size()), 1);
-    }
+    EXPECT_EQ(convert_to_number("-01"), -1);
+    EXPECT_EQ(convert_to_number("+01"), 1);
+    EXPECT_EQ(convert_to_number("01"), 1);
 }
 
 TEST(ConvertTest, SimpleFloat) {
-    {
-        std::string x = "1.234";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 1.234);
-    }
-
-    {
-        std::string x = "-101.234";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), -101.234);
-    }
-
-    {
-        std::string x = "0.5678";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 0.5678);
-    }
-
-    {
-        std::string x = "-0.0001";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), -0.0001);
-    }
-
-    {
-        std::string x = "10.00";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 10);
-    }
+    EXPECT_FLOAT_EQ(convert_to_number("1.234"), 1.234);
+    EXPECT_FLOAT_EQ(convert_to_number("-101.234"), -101.234);
+    EXPECT_FLOAT_EQ(convert_to_number("0.5678"), 0.5678);
+    EXPECT_FLOAT_EQ(convert_to_number("-0.0001"), -0.0001);
+    EXPECT_FLOAT_EQ(convert_to_number("10.00"), 10);
 
     // Leading zeros are fine.
-    {
-        std::string x = "-010.01";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), -10.01);
-    }
+    EXPECT_FLOAT_EQ(convert_to_number("-010.01"), -10.01);
 }
 
 TEST(ConvertTest, ScientificFloat) {
-    {
-        std::string x = "1.2e10";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 1.2e10);
-    }
-    
-    {
-        std::string x = "-3.45e+09";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), -3.45e9);
-    }
-
-    {
-        std::string x = "1.999e-9";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 1.999e-9); 
-    }
-
-    {
-        std::string x = "3.1e-00";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 3.1); 
-    }
-
-    {
-        std::string x = "2.31e1";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 23.1); 
-    }
-
-    {
-        std::string x = "2e2";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 200); 
-    }
-
-    {
-        std::string x = "4e-3";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 0.004);
-    }
+    EXPECT_FLOAT_EQ(convert_to_number("1.2e10"), 1.2e10);
+    EXPECT_FLOAT_EQ(convert_to_number("-3.45e+09"), -3.45e9);
+    EXPECT_FLOAT_EQ(convert_to_number("1.999e-9"), 1.999e-9); 
+    EXPECT_FLOAT_EQ(convert_to_number("3.1e-00"), 3.1); 
+    EXPECT_FLOAT_EQ(convert_to_number("2.31e1"), 23.1); 
+    EXPECT_FLOAT_EQ(convert_to_number("2e2"), 200); 
+    EXPECT_FLOAT_EQ(convert_to_number("4e-3"), 0.004);
 
     // Works with a big E.
-    {
-        std::string x = "4E-3";
-        EXPECT_FLOAT_EQ(comservatory::to_number(x.c_str(), x.size()), 0.004);
-    }
+    EXPECT_FLOAT_EQ(convert_to_number("4E-3"), 0.004);
 }
 
-TEST(ConvertTest, Special) {
-    {
-        std::string x = "inf";
-        auto val = comservatory::to_number(x.c_str(), x.size());
+TEST(ConvertTest, SpecialNumber) {
+    for (auto x : std::vector<std::string>{"inf", "Inf", "INF"}) {
+        auto val = convert_to_number(x);
         EXPECT_TRUE(val > 0);
         EXPECT_TRUE(std::isinf(val));
+
+        auto nval = convert_to_number("-" + x);
+        EXPECT_TRUE(nval < 0);
+        EXPECT_TRUE(std::isinf(nval));
     }
 
-    {
-        std::string x = "-Inf";
-        auto val = comservatory::to_number(x.c_str(), x.size());
-        EXPECT_TRUE(val < 0);
-        EXPECT_TRUE(std::isinf(val));
-    }
-
-    {
-        std::string x = "-nan";
-        auto val = comservatory::to_number(x.c_str(), x.size());
+    for (auto x : std::vector<std::string>{"nan", "NAN", "NaN"}) {
+        auto val = convert_to_number(x);
         EXPECT_TRUE(std::isnan(val));
-    }
-
-    {
-        std::string x = "Nan";
-        auto val = comservatory::to_number(x.c_str(), x.size());
-        EXPECT_TRUE(std::isnan(val));
+        auto nval = convert_to_number("-" + x);
+        EXPECT_TRUE(std::isnan(nval));
     }
 }
 
-TEST(ConvertTest, IntegerFail) {
-    {
-        std::string x = "10.0";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple<true>(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("only integer values"));
-                throw;
-            }
-        });
-    }
+TEST(ConvertTest, NumberFail) {
+    simple_conversion_fail("10", "should be terminated with a newline");
+    simple_conversion_fail("10L", "invalid number containing 'L'");
 
-    {
-        std::string x = "10L";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple<true>(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("invalid character"));
-                throw;
-            }
-        });
-    }
+    simple_conversion_fail("10.", "should be terminated with a newline");
+    simple_conversion_fail("10.\n", "must be followed by at least one digit");
+    simple_conversion_fail("10.a\n", "must be followed by at least one digit");
+    simple_conversion_fail("10.0", "should be terminated with a newline");
+    simple_conversion_fail("10.1a\n", "invalid fraction containing 'a'");
+    simple_conversion_fail("10.0.0\n", "invalid fraction containing '.'");
+    simple_conversion_fail(".0\n", "unknown type starting with '.'");
 
-    {
-        std::string x = "";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple<true>(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("no numbers"));
-                throw;
-            }
-        });
-    }
+    simple_conversion_fail("10e1\n", "absolute value");
+    simple_conversion_fail("1e", "should be terminated with a newline");
+    simple_conversion_fail("1e\n", "should be followed by a sign or digit");
+    simple_conversion_fail("1e+", "should be terminated with a newline");
+    simple_conversion_fail("1e+\n", "must be followed by at least one digit");
+    simple_conversion_fail("1e+a\n", "must be followed by at least one digit");
 
-    {
-        std::string x = "+";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple<true>(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("no numbers"));
-                throw;
-            }
-        });
-    }
+    simple_conversion_fail("1e+0", "should be terminated with a newline");
+    simple_conversion_fail("1e+1a", "invalid exponent containing 'a'");
+    simple_conversion_fail("2e1.1", "invalid exponent containing '.'");
 }
-
-TEST(ConvertTest, SimpleFloatFail) {
-    {
-        std::string x = "10.";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("after the decimal point"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = ".0";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("before the decimal point"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "0...0";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number_simple(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("multiple decimal points"));
-                throw;
-            }
-        });
-    }
-}
-
-TEST(ConvertTest, ScientificFloatFail) {
-    {
-        std::string x = "10e1";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("absolute value"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "2e1.1";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_number(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("exponent"));
-                throw;
-            }
-        });
-    }
-}
-

@@ -146,65 +146,6 @@ TEST(FieldTest, DummyMissing) {
     EXPECT_EQ(ptr->size(), 4);
 }
 
-TEST(FieldTest, Decider) {
-    {
-        std::string x = "\"asdascd\"";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::STRING);
-    }
-
-    {
-        std::string x = "12345";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::NUMBER);
-    }
-
-    {
-        std::string x = "10+12345i";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::COMPLEX);
-    }
-
-    {
-        std::string x = "FALSE";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::BOOLEAN);
-    }
-
-    {
-        std::string x = "true";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::BOOLEAN);
-    }
-
-    {
-        std::string x = "NA";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::UNKNOWN);
-    }
-
-    {
-        std::string x = "12345E2";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::NUMBER);
-    }
-
-    {
-        std::string x = "12345";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::NUMBER);
-    }
-
-    {
-        std::string x = "-12345";
-        EXPECT_EQ(comservatory::decide_type(x.c_str(), x.size()), comservatory::NUMBER);
-    }
-
-    {
-        std::string x = "";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::decide_type(x.c_str(), 0);
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("empty"));
-                throw;
-            }
-        });
-    }
-}
-
 TEST(FieldTest, Creator) {
     comservatory::DefaultFieldCreator<false> fun;
 

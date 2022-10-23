@@ -1,104 +1,58 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
 #include "comservatory/convert.hpp"
+
+#include "utils.h"
+
+std::string convert_to_string(std::string x) {
+    x = "\"foo\"\n\"" + x + "\"\n";
+    byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
+    comservatory::ReadCsv parser;
+
+    auto output = parser.read(reader);
+    EXPECT_EQ(output.fields.size(), 1);
+    EXPECT_EQ(output.fields[0]->type(), comservatory::STRING);
+
+    const auto& v = static_cast<const comservatory::FilledStringField*>(output.fields[0].get())->values;
+    EXPECT_EQ(v.size(), 1);
+    return v[0];
+}
 
 TEST(ConvertTest, String) {
     {
-        std::string x0 = "asdasdasd";
-        std::string x = "\"" + x0 + "\"";
-        EXPECT_EQ(comservatory::to_string(x.c_str(), x.size()), x0);
+        std::string x = "asdasdasd";
+        EXPECT_EQ(convert_to_string(x), x);
     }
 
     // Empty string works.
     {
-        std::string x0 = "";
-        std::string x = "\"" + x0 + "\"";
-        EXPECT_EQ(comservatory::to_string(x.c_str(), x.size()), x0);
+        std::string x = "";
+        EXPECT_EQ(convert_to_string(x), x);
     }
 
     // Unusual characters, no problem. 
     {
-        std::string x0 = "asdas\ndasd";
-        std::string x = "\"" + x0 + "\"";
-        EXPECT_EQ(comservatory::to_string(x.c_str(), x.size()), std::string("asdas\ndasd"));
+        std::string x = "asdas\ndasd";
+        EXPECT_EQ(convert_to_string(x), x);
     }
 
     {
-        std::string x0 = "asdas,dasd";
-        std::string x = "\"" + x0 + "\"";
-        EXPECT_EQ(comservatory::to_string(x.c_str(), x.size()), x0);
+        std::string x = "asdas,dasd";
+        EXPECT_EQ(convert_to_string(x), x);
     }
 
-    // Unusual characters, no problem. 
+    // Internal quotes, no problem. 
     {
-        std::string x0 = "asdas\"\"dasd";
-        std::string x = "\"" + x0 + "\"";
-        EXPECT_EQ(comservatory::to_string(x.c_str(), x.size()), "asdas\"dasd");
-        EXPECT_EQ(comservatory::to_string<false>(x.c_str(), x.size()), x0);
+        std::string x = "asdas\"\"dasd";
+        EXPECT_EQ(convert_to_string(x), "asdas\"dasd");
     }
 }
 
 TEST(ConvertTest, StringFail) {
-    // Must start and end with a double quote.
-    {
-        std::string x = "asdasd\"";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_string(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("double quote"));
-                throw;
-            }
-        });
-    }
-
-    {
-        std::string x = "\"asdasd";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_string(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("double quote"));
-                throw;
-            }
-        });
-    }
-    
-    {
-        std::string x = "";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_string(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("double quote"));
-                throw;
-            }
-        });
-    }
-
-    // Internal double quotes must be properly escaped.
-    {
-        std::string x = "\"asdas\"asdasd\"";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_string(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("should be escaped"));
-                throw;
-            }
-        });
-    }
-    
-    {
-        std::string x = "\"asdasasdasd\"\"";
-        EXPECT_ANY_THROW({
-            try {
-                comservatory::to_string(x.c_str(), x.size());
-            } catch (std::exception& e) {
-                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("should be escaped"));
-                throw;
-            }
-        });
-    }
+    simple_conversion_fail("asdasd\"", "unknown type starting with 'a'");
+    simple_conversion_fail("\"asdasd", "truncated string");
+    simple_conversion_fail("\"asdasd\"", "terminated with a newline");
+    simple_conversion_fail("\"asdasd\"asdasd\"\n", "trailing character 'a'");
+    simple_conversion_fail("\"asdasdasdasd\"\"\n", "truncated string");
 }
-

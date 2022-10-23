@@ -1,6 +1,10 @@
 #ifndef UTILS_H 
 #define UTILS_H 
 
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+#include "byteme/RawBufferReader.hpp"
 #include "comservatory/comservatory.hpp"
 
 inline const unsigned char* raw_bytes(const std::string& x) {
@@ -44,6 +48,25 @@ inline comservatory::Contents validate_path(std::string path) {
     comservatory::ReadCsv foo;
     foo.validate_only = true;
     return foo.read(path);
+}
+
+inline void parse_fail(const std::string& x, const std::string& msg) {
+    byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
+    comservatory::ReadCsv parser;
+
+    EXPECT_ANY_THROW({
+        try {
+            parser.read(reader);
+        } catch (std::exception& e) {
+            EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr(msg));
+            throw;
+        }
+    });
+}
+
+inline void simple_conversion_fail(std::string x, const std::string& msg) {
+    x = "\"foo\"\n" + x;
+    parse_fail(x, msg);
 }
 
 #endif
