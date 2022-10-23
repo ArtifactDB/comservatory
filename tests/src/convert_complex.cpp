@@ -57,4 +57,5 @@ TEST(ConvertTest, ComplexFail) {
     simple_conversion_fail("1i", "incorrectly formatted number");
     simple_conversion_fail("21+i", "incorrectly formatted complex number");
     simple_conversion_fail("21+5a", "invalid number containing 'a'");
+    simple_conversion_fail("21+5,", "incorrectly formatted complex number");
 }

@@ -13,7 +13,8 @@ inline std::string get_location(size_t column, size_t line) {
     return std::string("field ") + std::to_string(column + 1) + " of line " + std::to_string(line + 1);
 }
 
-// Assumes that the first character is the double quote.
+// Assumes that 'input' is located on the opening double quote. On return,
+// 'input' is left on the next character _after_ the closing double quote.
 template<class Input>
 std::string to_string(Input& input, size_t column, size_t line) {
     std::string output;
@@ -44,6 +45,9 @@ std::string to_string(Input& input, size_t column, size_t line) {
     return output;
 }
 
+// Assumes that 'input' is located on the first letter of the keyword (i.e.,
+// before the first letter of 'lower'). On return, 'input' is left on the
+// first character _after_ the end of the keyword.
 template<class Input>
 void expect_fixed(Input& input, const std::string& lower, const std::string& upper, size_t column, size_t line) {
     for (size_t i = 0; i < lower.size(); ++i) {
@@ -58,6 +62,8 @@ void expect_fixed(Input& input, const std::string& lower, const std::string& upp
     }
 }
 
+// Assumes that 'input' is located on the first digit. On return, 'input' is
+// left on the first character _after_ the end of the number.
 template<class Input>
 double to_number(Input& input, size_t column, size_t line) {
     double value = 0;

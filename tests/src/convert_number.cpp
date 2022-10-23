@@ -103,6 +103,11 @@ TEST(ConvertTest, NumberFail) {
     simple_conversion_fail("1e+1a", "invalid exponent containing 'a'");
     simple_conversion_fail("2e1.1", "invalid exponent containing '.'");
 
+    simple_conversion_fail("+", "truncated field");
+    simple_conversion_fail("+a\n", "invalid number");
+    simple_conversion_fail("-", "truncated field");
+    simple_conversion_fail("-x\n", "incorrectly formatted number");
+
     simple_conversion_fail("N", "truncated keyword");
     simple_conversion_fail("Nt", "unknown keyword");
     simple_conversion_fail("NA", "should terminate with a newline");

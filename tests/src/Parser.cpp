@@ -205,6 +205,15 @@ TEST(LoadTest, NoColumns) {
     EXPECT_EQ(out.num_records(), 3);
 }
 
+TEST(LoadTest, HeaderOnly) {
+    std::string x = "\"aaron\",\"britney\",\"darth\"\n";
+    byteme::RawBufferReader reader(raw_bytes(x), x.size());
+    auto out = load_simple(reader);
+
+    EXPECT_EQ(out.fields.size(), 3);
+    EXPECT_EQ(out.num_records(), 0);
+}
+
 TEST(LoadTest, DummyByName) {
     std::string x = "\"aaron\",\"britney\",\"chuck\",\"darth\"\n123,4.5e3+2.1i,\"asdasd\",TRUE\n23.01,-1-4i,\"\",false\n";
     byteme::RawBufferReader reader(raw_bytes(x), x.size());
@@ -239,14 +248,23 @@ TEST(LoadTest, DummyByIndex) {
 }
 
 TEST(LoadTest, Failures) {
+    parse_fail("12345,\"britney\",\"aaron\"\n1,2,3\n", "all headers should be quoted");
+    parse_fail("\"britney\",\"aaron\"1234\n", "trailing character");
     parse_fail("\"aaron\",\"britney\",\"aaron\"\n1,2,3\n", "duplicated header");
+
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2\n", "fewer fields");
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,3,4\n", "more fields");
+
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,3\nTRUE,3,4\n", "previous and current types");
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,3\n3\"asd,3,4\n", "invalid number containing '\"'");
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n4,3,\"asdasd\n", "truncated string");
+
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,\"asdasd\"\n\n4,3,\"asdasd\"\n", "is empty");
     parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,\n4,3,4\n", "is empty");
+    parse_fail("\"aaron\",\"britney\",\"foo\"\n1,2,", "line 2 is truncated");
+
+    parse_fail("", "CSV file is empty");
+    parse_fail("\n1\n", "more fields on line 2");
 }
 
 TEST(LoadTest, ParallelFailures) {

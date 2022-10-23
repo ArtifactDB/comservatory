@@ -195,7 +195,7 @@ private:
             first *= -1;
         }
 
-        char next = input.get(); // to need to check validity, as to_number always leaves us in a valid state (or throws itself).
+        char next = input.get(); // no need to check validity, as to_number always leaves us on a valid position (or throws itself).
         if (next == ',' || next == '\n') {
             auto* current = check_column_type(info, NUMBER, column, line);
             static_cast<NumberField*>(current)->push_back(first);
@@ -259,10 +259,7 @@ private:
                 throw std::runtime_error("all headers should be quoted strings");
             }
 
-            info.names.push_back(to_string(input, info.names.size(), 0));
-            if (!input.valid()) {
-                throw std::runtime_error("truncated headers without a trailing newline");
-            }
+            info.names.push_back(to_string(input, info.names.size(), 0)); // no need to check validity, as to_string always leaves us on a valid position (or throws itself).
 
             char next = input.get();
             input.advance();
