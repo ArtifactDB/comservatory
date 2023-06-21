@@ -1,7 +1,13 @@
 <map id="comservatory/Field.hpp" name="comservatory/Field.hpp">
-<area shape="rect" id="node1" title="Defines the Field virtual class and concrete implementations." alt="" coords="135,5,291,31"/>
-<area shape="rect" id="node2" href="$Creator_8hpp.html" title="Defines the FieldCreator class and defaults." alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node3" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="59,152,226,177"/>
-<area shape="rect" id="node4" href="$ReadCsv_8hpp.html" title="Implements user&#45;visible functions for loading a CSV file." alt="" coords="112,225,293,251"/>
-<area shape="rect" id="node5" href="$comservatory_8hpp.html" title="Entrypoint header for the comservatory library." alt="" coords="99,299,306,324"/>
+<area shape="rect" id="Node000001" title="Defines the Field virtual class and concrete implementations." alt="" coords="135,5,290,31"/>
+<area shape="rect" id="Node000002" href="$Creator_8hpp.html" title="Defines the FieldCreator class and defaults." alt="" coords="5,79,175,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,41,112,81,110,76,178,37"/>
+<area shape="rect" id="Node000003" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="61,153,226,178"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="209,46,188,106,156,154,152,151,184,103,204,45"/>
+<area shape="rect" id="Node000004" href="$ReadCsv_8hpp.html" title="Implements user&#45;visible functions for loading a CSV file." alt="" coords="113,226,294,252"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="226,44,242,106,245,143,241,179,229,206,215,227,211,224,224,203,235,178,240,142,237,107,221,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,115,136,151,132,154,105,118"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="165,188,195,224,191,228,161,191"/>
+<area shape="rect" id="Node000005" href="$comservatory_8hpp.html" title="Entrypoint header for the comservatory library." alt="" coords="101,300,306,326"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="206,267,206,300,201,300,201,267"/>
 </map>
