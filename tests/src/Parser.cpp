@@ -3,7 +3,7 @@
 
 #include "utils.h"
 #include "compare_contents.h"
-#include "byteme/RawBufferReader.hpp"
+#include "byteme/byteme.hpp"
 
 TEST(LoadTest, Basic) {
     std::string x = "\"aaron\",\"britney\",\"chuck\",\"darth\"\n123,4.5e3+2.1i,\"asdasd\",TRUE\n23.01,-1-4i,\"\",false\n";
@@ -108,48 +108,12 @@ TEST(LoadTest, DifficultNumbers) {
     EXPECT_TRUE(std::isinf(ptr2->values[3]));
 }
 
-template<size_t chunksize>
-class ChunkedBufferReader : public byteme::Reader {
-public:
-    ChunkedBufferReader(const unsigned char* buffer, size_t length) : buffer_(buffer), remaining(length), len_(chunksize) {}
-
-    bool operator()() {
-        if (!init) {
-            buffer_ += chunksize;
-            remaining -= chunksize;
-        } else {
-            init = false;
-        }
-
-        if (chunksize < remaining) {
-            return true;
-        } else {
-            len_ = remaining;
-            return false;
-        }
-    }
-
-    const unsigned char* buffer() const {
-        return buffer_;
-    }
-
-    size_t available() const {
-        return len_;
-    }
-
-private:
-    const unsigned char* buffer_;
-    size_t remaining;
-    size_t len_;
-    bool init = true;
-};
-
 TEST(LoadTest, MultiChunk) {
     std::string x = "\"aaron\nlun\",\"britney,spears\",\"darth \"\"vader\"\"\"\n\"sdasd\",2e34,TRUE\n\"ccscs\",56.6,true\n";
     byteme::RawBufferReader reader(raw_bytes(x), x.size());
     auto ref = load_simple(reader);
 
-    ChunkedBufferReader<10> reader2(raw_bytes(x), x.size());
+    byteme::ChunkedBufferReader reader2(raw_bytes(x), x.size(), 10);
     auto out = load_simple(reader2);
     compare_contents(ref, out);
 
@@ -178,7 +142,7 @@ TEST(LoadTest, Parallelized) {
     compare_contents(ref, par);
 
     // Need small chunks for the parallelization to do something meaningful.
-    ChunkedBufferReader<10> reader3(raw_bytes(x), x.size());
+    byteme::ChunkedBufferReader reader3(raw_bytes(x), x.size(), 10);
     auto out = load_parallel(reader3);
     compare_contents(ref, out);
 }
@@ -269,7 +233,7 @@ TEST(LoadTest, Failures) {
 
 TEST(LoadTest, ParallelFailures) {
     std::string x = "\"aaron\",\"britney\",\"aaron\"\n1,2,3\n";
-    ChunkedBufferReader<10> reader(raw_bytes(x), x.size());
+    byteme::ChunkedBufferReader reader(raw_bytes(x), x.size(), 10);
 
     comservatory::ReadCsv parser;
     parser.parallel = true;
