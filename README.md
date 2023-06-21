@@ -1,8 +1,8 @@
 # Strict CSV validation and loading
 
-![Unit tests](https://github.com/LTLA/comservatory/actions/workflows/run-tests.yaml/badge.svg)
-![Documentation](https://github.com/LTLA/comservatory/actions/workflows/doxygenate.yaml/badge.svg)
-[![codecov](https://codecov.io/gh/LTLA/comservatory/branch/master/graph/badge.svg?token=J3dxS3MtT1)](https://codecov.io/gh/LTLA/comservatory)
+![Unit tests](https://github.com/ArtifactDB/comservatory/actions/workflows/run-tests.yaml/badge.svg)
+![Documentation](https://github.com/ArtifactDB/comservatory/actions/workflows/doxygenate.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/ArtifactDB/comservatory/branch/master/graph/badge.svg?token=J3dxS3MtT1)](https://codecov.io/gh/ArtifactDB/comservatory)
 
 ## Overview
 
