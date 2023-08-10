@@ -173,12 +173,13 @@ $(function() {
 <div class="line">auto dummy_contents = reader.read(path); // throws error for invalid formats.</div>
 </div><!-- fragment --><p >See the <a href="https://ltla.github.io/comservatory">reference documentation</a> for more details.</p>
 <h2>Building projects</h2>
+<h3>CMake with <code>FetchContent</code></h3>
 <p >If you're using CMake, you just need to add something like this to your <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
 <div class="line"> </div>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">  libscran</div>
-<div class="line">  GIT_REPOSITORY https://github.com/LTLA/comservatory</div>
+<div class="line">  GIT_REPOSITORY https://github.com/ArtifactDB/comservatory</div>
 <div class="line">  GIT_TAG master # or any version of interest </div>
 <div class="line">)</div>
 <div class="line"> </div>
@@ -189,7 +190,17 @@ $(function() {
 <div class="line"> </div>
 <div class="line"># For libaries</div>
 <div class="line">target_link_libraries(mylib INTERFACE comservatory)</div>
-</div><!-- fragment --><h2>Handling other inputs</h2>
+</div><!-- fragment --><h3>CMake with <code>find_package()</code></h3>
+<p >You can install the library by cloning a suitable version of this repository and running the following commands:</p>
+<div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
+<div class="line">cmake .. -DCOMSERVATORY_TESTS=OFF</div>
+<div class="line">cmake --build . --target install</div>
+</div><!-- fragment --><p >Then you can use <code>find_package()</code> as usual:</p>
+<div class="fragment"><div class="line">find_package(artifactdb_comservatory CONFIG REQUIRED)</div>
+<div class="line">target_link_libraries(mylib INTERFACE artifactdb::comservatory)</div>
+</div><!-- fragment --><h3>Manual</h3>
+<p >If you're not using CMake, the simple approach is to just copy the files in the <code>include/</code> subdirectory - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's <code>-I</code>. You will also need to link to <a href="https://github.com/LTLA/byteme"><b>byteme</b></a> directory, along with the Zlib library.</p>
+<h2>Handling other inputs</h2>
 <p >Gzipped CSVs are supported by <code>load()</code> once the <code>COMSERVATORY_USE_ZLIB</code> macro is defined and the library is linked to Zlib. With CMake, this usually involves the following commands:</p>
 <div class="fragment"><div class="line">target_compile_definitions(libtest PRIVATE COMSERVATORY_USE_ZLIB=1)</div>
 <div class="line">target_link_libraries(libtest ZLIB::ZLIB)</div>
@@ -293,7 +304,7 @@ $(function() {
 <div class="line"><span class="keyword">auto</span> deqcontents = reader.<a class="code hl_function" href="classcomservatory_1_1ReadCsv.html#a87da77b116405a8229f7fafe5fdb87cc">read</a>(path);</div>
 <div class="ttc" id="aclasscomservatory_1_1ReadCsv_html_a7cbd002ff77f75a7622fe0f1661fae8f"><div class="ttname"><a href="classcomservatory_1_1ReadCsv.html#a7cbd002ff77f75a7622fe0f1661fae8f">comservatory::ReadCsv::creator</a></div><div class="ttdeci">const FieldCreator * creator</div><div class="ttdef"><b>Definition:</b> ReadCsv.hpp:44</div></div>
 </div><!-- fragment --><h1>Links</h1>
-<p >If you see any bugs, report them in the <a href="https://github.com/LTLA/comservatory/issues">Issues</a>. Pull requests are also welcome. </p>
+<p >If you see any bugs, report them in the <a href="https://github.com/ArtifactDB/comservatory/issues">Issues</a>. Pull requests are also welcome. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
