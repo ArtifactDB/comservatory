@@ -262,13 +262,7 @@ You will also need to link to [**byteme**](https://github.com/LTLA/byteme) direc
 
 ### Handling other inputs
 
-Gzipped CSVs are supported by `load()` once the `COMSERVATORY_USE_ZLIB` macro is defined and the library is linked to Zlib.
-With CMake, this usually involves the following commands:
-
-```
-target_compile_definitions(libtest PRIVATE COMSERVATORY_USE_ZLIB=1)
-target_link_libraries(libtest ZLIB::ZLIB)
-```
+Gzipped CSVs are automatically supported by `load()` once **comservatory** is compiled with Zlib support.
 
 Other inputs are supported via the `load()` overload for [`byteme::Reader`](https://github.com/LTLA/byteme) classes.
 For example, we can parse a CSV file from an in-memory Zlib-compressed buffer:

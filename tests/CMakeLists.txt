@@ -25,6 +25,7 @@ add_executable(
     src/Field.cpp
     src/Parser.cpp
     src/TextReader.cpp
+    src/GzipReader.cpp
 )
 
 target_link_libraries(
@@ -33,13 +34,6 @@ target_link_libraries(
     gmock_main
     comservatory
 )
-
-find_package(ZLIB)
-if(ZLIB_FOUND)
-    target_compile_definitions(libtest PRIVATE COMSERVATORY_USE_ZLIB=1)
-    target_link_libraries(libtest ZLIB::ZLIB)
-    target_sources(libtest PRIVATE src/GzipReader.cpp)
-endif() 
 
 include(CheckIncludeFiles)
 check_include_files(filesystem HAVE_CXX_FS)
