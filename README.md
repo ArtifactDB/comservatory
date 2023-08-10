@@ -211,6 +211,8 @@ See the [reference documentation](https://ltla.github.io/comservatory) for more 
 
 ### Building projects 
 
+#### CMake with `FetchContent`
+
 If you're using CMake, you just need to add something like this to your `CMakeLists.txt`:
 
 ```
@@ -218,7 +220,7 @@ include(FetchContent)
 
 FetchContent_Declare(
   libscran
-  GIT_REPOSITORY https://github.com/LTLA/comservatory
+  GIT_REPOSITORY https://github.com/ArtifactDB/comservatory
   GIT_TAG master # or any version of interest 
 )
 
@@ -234,6 +236,29 @@ target_link_libraries(myexe comservatory)
 # For libaries
 target_link_libraries(mylib INTERFACE comservatory)
 ```
+
+#### CMake with `find_package()`
+
+You can install the library by cloning a suitable version of this repository and running the following commands:
+
+```sh
+mkdir build && cd build
+cmake .. -DCOMSERVATORY_TESTS=OFF
+cmake --build . --target install
+```
+
+Then you can use `find_package()` as usual:
+
+```cmake
+find_package(artifactdb_comservatory CONFIG REQUIRED)
+target_link_libraries(mylib INTERFACE artifactdb::comservatory)
+```
+
+#### Manual
+
+If you're not using CMake, the simple approach is to just copy the files in the `include/` subdirectory - 
+either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
+You will also need to link to [**byteme**](https://github.com/LTLA/byteme) directory, along with the Zlib library.
 
 ### Handling other inputs
 
@@ -356,5 +381,5 @@ auto deqcontents = reader.read(path);
 
 ## Links
 
-If you see any bugs, report them in the [Issues](https://github.com/LTLA/comservatory/issues).
+If you see any bugs, report them in the [Issues](https://github.com/ArtifactDB/comservatory/issues).
 Pull requests are also welcome.
