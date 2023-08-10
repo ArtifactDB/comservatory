@@ -1,9 +1,6 @@
 <map id="comservatory::TypedField&lt; T, tt &gt;" name="comservatory::TypedField&lt; T, tt &gt;">
-<area shape="rect" id="Node000001" title="Template class for a field of a known type." alt="" coords="107,79,276,120"/>
-<area shape="rect" id="Node000003" href="$structcomservatory_1_1DummyField.html" title="Template class for a typed dummy field that only pretends to store its values." alt="" coords="5,168,183,208"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,132,118,169,114,165,157,128"/>
-<area shape="rect" id="Node000004" href="$structcomservatory_1_1FilledField.html" title="Template class for a typed field that uses a std::vector to store its values." alt="" coords="207,168,371,208"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="226,128,268,165,265,169,222,132"/>
-<area shape="rect" id="Node000002" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="125,5,258,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,46,194,79,189,79,189,46"/>
+<area shape="rect" id="node1" title="Template class for a field of a known type." alt="" coords="107,79,277,119"/>
+<area shape="rect" id="node3" href="$structcomservatory_1_1DummyField.html" title="Template class for a typed dummy field that only pretends to store its values." alt="" coords="5,167,184,207"/>
+<area shape="rect" id="node4" href="$structcomservatory_1_1FilledField.html" title="Template class for a typed field that uses a std::vector to store its values." alt="" coords="208,167,373,207"/>
+<area shape="rect" id="node2" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="125,5,259,31"/>
 </map>

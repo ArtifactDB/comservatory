@@ -1,5 +1,4 @@
 <map id="comservatory::TypedField&lt; T, tt &gt;" name="comservatory::TypedField&lt; T, tt &gt;">
-<area shape="rect" id="Node000001" title="Template class for a field of a known type." alt="" coords="5,79,174,120"/>
-<area shape="rect" id="Node000002" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="23,5,156,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,46,92,79,87,79,87,46"/>
+<area shape="rect" id="node1" title="Template class for a field of a known type." alt="" coords="5,79,175,119"/>
+<area shape="rect" id="node2" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="23,5,157,31"/>
 </map>
