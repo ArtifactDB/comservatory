@@ -8,8 +8,11 @@
 
 The comma separated value (CSV) format uses a tabular layout where each record starts on a new line and fields are separated by commas.
 Beyond this, though, there is little standardization on the specifics of how the fields are interpreted.
-The **comservatory** library defines an opinionated version of a "CSV standard" and provides a header-only C++ library to validate and load a CSV file.
+The **comservatory** repository defines an opinionated version of a "CSV standard" and provides a header-only C++ library to validate and load a CSV file.
 It is primarily intended for use in data management applications that write CSV files and want to provide some structural guarantees for downstream users.
+
+The current version of the **comservatory** specification is 1.0.
+(Not to be confused with the release versions of the **comservatory** C++ library.)
 
 ## Standard definition
 
