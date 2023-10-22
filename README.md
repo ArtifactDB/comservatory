@@ -265,17 +265,35 @@ You will also need to link to [**byteme**](https://github.com/LTLA/byteme) direc
 
 ### Handling other inputs
 
-Gzipped CSVs are automatically supported by `load()` once **comservatory** is compiled with Zlib support.
+Gzipped CSVs are automatically supported by `read_file()` once **comservatory** is compiled with Zlib support.
 
-Other inputs are supported via the `load()` overload for [`byteme::Reader`](https://github.com/LTLA/byteme) classes.
+Other inputs are supported via the `read()` function for [`byteme::Reader`](https://github.com/LTLA/byteme) classes.
 For example, we can parse a CSV file from an in-memory Zlib-compressed buffer:
 
 ```cpp
 #include "byteme/ZlibBufferReader.hpp"
 
 byteme::ZlibBufferReader reader(buffer, length);
-auto contents = load(reader); // or just validate(reader).
+auto contents = read(reader, comservatory::ReadOptions());
 ```
+
+### Using known `Field`s
+
+If the header names and/or field types are known in advance, we can specify them in a `Contents` object to be passed to `read_file()`.
+This allows developers to strictly control the contents of each field while it is filled.
+
+```cpp
+Contents contents;
+contents.names = std::vector<std::string>{ "loid", "yor", "anya" };
+contents.fields.emplace_back(new comservatory::FilledBooleanField);
+contents.fields.emplace_back(new comservatory::FilledStringField);
+contents.fields.emplace_back(new comservatory::FilledNumberField);
+
+read_file(path, contents, comservatory::ReadOptions());
+```
+
+If the data in the CSV does not match the supplied information, an error is immediately raised.
+This is helpful for validation purposes, as opposed to reading the entire file into memory and then checking the contents.
 
 ### Customizing `Field` types
 
@@ -366,7 +384,7 @@ struct DequeFieldCreator : public comservatory::FieldCreator {
 };
 ```
 
-And then we can direct `ReadCsv` to use this new `FieldCreator`:
+And then we can direct `read_file()` to use this new `FieldCreator`:
 
 ```cpp
 DequeFieldCreator custom;
