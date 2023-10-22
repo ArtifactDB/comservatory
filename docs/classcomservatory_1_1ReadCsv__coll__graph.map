@@ -1,4 +1,0 @@
-<map id="comservatory::ReadCsv" name="comservatory::ReadCsv">
-<area shape="rect" id="node1" title="Read the contents of CSV files into memory." alt="" coords="14,93,173,119"/>
-<area shape="rect" id="node2" href="$structcomservatory_1_1FieldCreator.html" title="Virtual base class for a Field creator." alt="" coords="5,5,181,31"/>
-</map>

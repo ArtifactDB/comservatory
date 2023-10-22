@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['keep_5fsubset_0',['keep_subset',['../classcomservatory_1_1ReadCsv.html#add2460c28cdbc9719a158db4ef61516c',1,'comservatory::ReadCsv']]],
-  ['keep_5fsubset_5findices_1',['keep_subset_indices',['../classcomservatory_1_1ReadCsv.html#a5061fa2455f3ff4c087635de14130e34',1,'comservatory::ReadCsv']]],
-  ['keep_5fsubset_5fnames_2',['keep_subset_names',['../classcomservatory_1_1ReadCsv.html#af9a05178aa2ac853780ca92c4e7b8382',1,'comservatory::ReadCsv']]]
+  ['names_0',['names',['../structcomservatory_1_1Contents.html#a6385b72b3636ceda4d8859bcd76e86c8',1,'comservatory::Contents']]],
+  ['num_5ffields_1',['num_fields',['../structcomservatory_1_1Contents.html#a11df78591739b0663c0098643f82e2a0',1,'comservatory::Contents']]],
+  ['num_5frecords_2',['num_records',['../structcomservatory_1_1Contents.html#a3c1c412728a558847ee24aa0cc881d04',1,'comservatory::Contents']]],
+  ['numberfield_3',['NumberField',['../namespacecomservatory.html#af13c309afd21a226a375bd16c4e0ea15',1,'comservatory']]]
 ];

@@ -1,4 +1,4 @@
 <map id="comservatory/ReadCsv.hpp" name="comservatory/ReadCsv.hpp">
-<area shape="rect" id="node1" title="Implements user&#45;visible functions for loading a CSV file." alt="" coords="18,5,199,31"/>
+<area shape="rect" id="node1" title="Backwards compatibility only, use read() instead." alt="" coords="18,5,199,31"/>
 <area shape="rect" id="node2" href="$comservatory_8hpp.html" title="Entrypoint header for the comservatory library." alt="" coords="5,79,212,104"/>
 </map>
