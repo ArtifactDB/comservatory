@@ -183,7 +183,7 @@ Given a path to a CSV file, we can load its contents using the `read_file()` fun
 ```{r}
 #include "comservatory/comservatory.hpp"
 
-auto contents = comservatory::read_file(path, comservatory::ReadOptions());
+auto contents = comservatory::read_file(path);
 ```
 
 If we are only interested in a subset of fields, we can ask `read_file()` to only return that subset.

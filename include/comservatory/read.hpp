@@ -158,6 +158,17 @@ inline Contents read_file(const char* path, const ReadOptions& options) {
 
 /**
  * @param path Path to a (possibly Gzipped) CSV file.
+ *
+ * @return The `Contents` of the CSV file.
+ *
+ * Gzip support requires linking to the Zlib library.
+ */
+inline Contents read_file(const char* path) {
+    return read_file(path, ReadOptions());
+} 
+
+/**
+ * @param path Path to a (possibly Gzipped) CSV file.
  * @param contents `Contents` to store the parsed contents of the file, see the `read()` overload for details.
  * @param options Reading options.
  *
@@ -180,6 +191,18 @@ inline void read_file(const std::string& path, Contents& contents, const ReadOpt
 inline Contents read_file(const std::string& path, const ReadOptions& options) {
     return read_file(path.c_str(), options);
 } 
+
+/**
+ * @param path Path to a (possibly Gzipped) CSV file.
+ *
+ * @return The `Contents` of the CSV file.
+ *
+ * Gzip support requires linking to the Zlib library.
+ */
+inline Contents read_file(const std::string& path) {
+    return read_file(path.c_str(), ReadOptions());
+} 
+
 
 }
 

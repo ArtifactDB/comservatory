@@ -24,7 +24,7 @@ comservatory::Contents load_parallel(Reader& reader) {
 }
 
 inline comservatory::Contents load_path(std::string path) {
-    return comservatory::read_file(path, comservatory::ReadOptions());
+    return comservatory::read_file(path);
 }
 
 template<class Reader>
