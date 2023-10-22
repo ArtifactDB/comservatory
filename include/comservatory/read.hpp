@@ -86,9 +86,14 @@ inline Parser configure_parser(const FieldCreator* creator, const ReadOptions& o
  *
  * @param reader Instance of a `Reader` class, containing the data stream for a CSV file.
  * @param contents `Contents` to store the parsed contents of the file.
- * This can contain pre-filled `Contents::names`, which will be checked against the header names in the file.
- * This can also contain pre-filled `Contents::fields`, which will be directly used for storing data from each column.
  * @param options Reading options.
+ *
+ * `contents` can contain pre-filled `Contents::names`, which will be checked against the header names in the file.
+ * Any differences in the observed header names and those in `Contents::names` will throw an error.
+ *
+ * `contents` can also contain pre-filled `Contents::fields`, which will be directly used for storing data from each column.
+ * This is useful if the types of all columns are known in advance, and/or if certain columns need special handling via `Field` subclasses.
+ * Any pre-filled field with an `UNKNOWN` type will be replaced via `Creator::create()`.
  */
 template<class Reader>
 void read(Reader& reader, Contents& contents, const ReadOptions& options) {
