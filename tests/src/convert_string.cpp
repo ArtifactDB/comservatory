@@ -1,16 +1,15 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "comservatory/convert.hpp"
+#include "comservatory/read.hpp"
 
 #include "utils.h"
 
 std::string convert_to_string(std::string x) {
     x = "\"foo\"\n\"" + x + "\"\n";
     byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
-    comservatory::ReadCsv parser;
 
-    auto output = parser.read(reader);
+    auto output = comservatory::read(reader, comservatory::ReadOptions());
     EXPECT_EQ(output.fields.size(), 1);
     EXPECT_EQ(output.fields[0]->type(), comservatory::STRING);
 

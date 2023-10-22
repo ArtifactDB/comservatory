@@ -235,12 +235,12 @@ TEST(LoadTest, ParallelFailures) {
     std::string x = "\"aaron\",\"britney\",\"aaron\"\n1,2,3\n";
     byteme::ChunkedBufferReader reader(raw_bytes(x), x.size(), 10);
 
-    comservatory::ReadCsv parser;
-    parser.parallel = true;
+    comservatory::ReadOptions opt;
+    opt.parallel = true;
 
     EXPECT_ANY_THROW({
         try {
-            parser.read(reader);
+            comservatory::read(reader, opt);
         } catch (std::exception& e) {
             EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("duplicated header"));
             throw;
@@ -250,13 +250,13 @@ TEST(LoadTest, ParallelFailures) {
 
 TEST(LoadTest, CustomCreator) {
     comservatory::DefaultFieldCreator<true> validator;
-    comservatory::ReadCsv foo;
-    foo.creator = &validator;
+    comservatory::ReadOptions opt;
+    opt.creator = &validator;
 
     std::string x = "\"aaron\",\"britney\",\"chuck\",\"darth\"\n123,4.5e3+2.1i,\"asdasd\",TRUE\n23.01,-1-4i,\"\",false\n";
     byteme::RawBufferReader reader(raw_bytes(x), x.size());
 
-    auto output = foo.read(reader);
+    auto output = comservatory::read(reader, opt);
     EXPECT_EQ(output.names[0], "aaron");
     EXPECT_EQ(output.names[1], "britney");
     EXPECT_EQ(output.names[2], "chuck");
@@ -266,4 +266,107 @@ TEST(LoadTest, CustomCreator) {
     EXPECT_FALSE(output.fields[1]->filled());
     EXPECT_FALSE(output.fields[2]->filled());
     EXPECT_FALSE(output.fields[3]->filled());
+}
+
+TEST(LoadTest, PreloadedNames) {
+    comservatory::Contents contents;
+    contents.names = std::vector<std::string>{ "aaron", "britney", "chuck", "darth"};
+    auto old_names = contents.names;
+
+    std::string x = "\"aaron\",\"britney\",\"chuck\",\"darth\"\n123,4.5e3+2.1i,\"asdasd\",TRUE\n23.01,-1-4i,\"\",false\n";
+    byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+    comservatory::read(reader, contents, comservatory::ReadOptions());
+    EXPECT_EQ(old_names, contents.names);
+    EXPECT_EQ(old_names.size(), contents.num_fields());
+
+    // What about a mismatch?
+    {
+        comservatory::Contents contents;
+        contents.names = old_names;
+        contents.names.pop_back();
+        byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+        EXPECT_ANY_THROW({
+            try {
+                comservatory::read(reader, contents, comservatory::ReadOptions());
+            } catch (std::exception& e) {
+                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("not equal to the number of header names"));
+                throw;
+            }
+        });
+    }
+
+    {
+        comservatory::Contents contents;
+        contents.names = old_names;
+        std::reverse(contents.names.begin(), contents.names.end());
+        byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+        EXPECT_ANY_THROW({
+            try {
+                comservatory::read(reader, contents, comservatory::ReadOptions());
+            } catch (std::exception& e) {
+                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("mismatch between provided"));
+                throw;
+            }
+        });
+    }
+}
+
+TEST(LoadTest, PreloadedFields) {
+    comservatory::Contents contents;
+    contents.fields.emplace_back(new comservatory::FilledNumberField);
+    contents.fields.emplace_back(new comservatory::FilledComplexField);
+    contents.fields.emplace_back(new comservatory::FilledStringField);
+    contents.fields.emplace_back(new comservatory::FilledBooleanField);
+
+    std::vector<uintptr_t> field_ptrs;
+    for (const auto& cf : contents.fields) {
+        field_ptrs.push_back(reinterpret_cast<uintptr_t>(cf.get()));
+    }
+
+    std::string x = "\"aaron\",\"britney\",\"chuck\",\"darth\"\n123,4.5e3+2.1i,\"asdasd\",TRUE\n23.01,-1-4i,\"\",false\n";
+    byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+    comservatory::read(reader, contents, comservatory::ReadOptions());
+    std::vector<uintptr_t> observed_ptrs;
+    for (const auto& cf : contents.fields) {
+        observed_ptrs.push_back(reinterpret_cast<uintptr_t>(cf.get()));
+    }
+    EXPECT_EQ(field_ptrs, observed_ptrs);
+
+    // What about a mismatch?
+    {
+        comservatory::Contents contents;
+        contents.fields.emplace_back(new comservatory::FilledNumberField);
+        byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+        EXPECT_ANY_THROW({
+            try {
+                comservatory::read(reader, contents, comservatory::ReadOptions());
+            } catch (std::exception& e) {
+                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("not equal to the number of header names"));
+                throw;
+            }
+        });
+    }
+
+    {
+        comservatory::Contents contents;
+        contents.fields.emplace_back(new comservatory::FilledBooleanField);
+        contents.fields.emplace_back(new comservatory::FilledStringField);
+        contents.fields.emplace_back(new comservatory::FilledComplexField);
+        contents.fields.emplace_back(new comservatory::FilledNumberField);
+        byteme::RawBufferReader reader(raw_bytes(x), x.size());
+
+        EXPECT_ANY_THROW({
+            try {
+                comservatory::read(reader, contents, comservatory::ReadOptions());
+            } catch (std::exception& e) {
+                EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("previous and current types"));
+                throw;
+            }
+        });
+    }
 }
