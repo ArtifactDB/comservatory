@@ -11,9 +11,6 @@ Beyond this, though, there is little standardization on the specifics of how the
 The **comservatory** repository defines an opinionated version of a "CSV standard" and provides a header-only C++ library to validate and load a CSV file.
 It is primarily intended for use in data management applications that write CSV files and want to provide some structural guarantees for downstream users.
 
-The current version of the **comservatory** specification is 1.0.
-(Not to be confused with the release versions of the **comservatory** C++ library.)
-
 ## Standard definition
 
 ### General
@@ -59,6 +56,9 @@ The last line of the file should be terminated with a newline.
 Zero-column datasets are represented by an empty line in the header and one empty line per record.
 
 There is no support for comment characters or lines.
+
+The current version of the **comservatory** specification is 1.0.
+(This should not be confused with the release versions of the **comservatory** C++ library.) 
 
 ### String
 
@@ -178,36 +178,36 @@ Missing values are denoted by `NA` entries.
 
 A reference implementation of the validator is provided as a header-only C++ library in [`include/comservatory`](include/comservatory).
 This is useful for portable deployment in different frameworks like R, Python, etc.
-Given a path to a CSV file, we can load its contents using the `ReadCsv` class:
+Given a path to a CSV file, we can load its contents using the `read_file()` function:
 
 ```{r}
 #include "comservatory/comservatory.hpp"
 
-comservatory::ReadCsv reader;
-auto contents = reader.read(path);
+auto contents = comservatory::read_file(path, comservatory::ReadOptions());
 ```
 
-If we are only interested in a subset of fields, we can ask `read()` to only return that subset.
+If we are only interested in a subset of fields, we can ask `read_file()` to only return that subset.
 Note that all fields are still validated but only the contents of the requested fields are returned in memory - all other fields have placeholder entries.
 
 ```cpp
-comservatory::ReadCsv reader;
+comservatory::ReadOptions opt;
 
 // keep fields named 'field1', 'field2'
-reader.keep_subset_names = std::vector<std::string>{ "field1", "field2" };
+opt.keep_subset_names = std::vector<std::string>{ "field1", "field2" };
 
 // also keep fields 3 and 4 (zero-indexed)
-reader.keep_subset_indices = std::vector<int>{ 3, 4 };
+opt.keep_subset_indices = std::vector<int>{ 3, 4 };
 
-auto contents = reader.read(path);
+auto contents = comservatory::read_file(path, opt);
 ```
 
 If only validation is required, we can avoid storing contents in memory by setting `validate_only = true`.
+This will parse the file and throw an error upon encountering an invalid format.
 
 ```{r}
-comservatory::ReadCsv reader;
-reader.validate_only = true;
-auto dummy_contents = reader.read(path); // throws error for invalid formats.
+comservatory::ReadOptions opt;
+opt.validate_only = true;
+auto dummy_contents = comservatory::read_file(path, opt);
 ```
 
 See the [reference documentation](https://ltla.github.io/comservatory) for more details.
