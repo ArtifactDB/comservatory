@@ -13,50 +13,49 @@ inline const unsigned char* raw_bytes(const std::string& x) {
 
 template<class Reader>
 comservatory::Contents load_simple(Reader& reader) {
-    return comservatory::ReadCsv().read(reader);
+    return comservatory::read(reader, comservatory::ReadOptions());
 }
 
 template<class Reader>
 comservatory::Contents load_parallel(Reader& reader) {
-    comservatory::ReadCsv foo;
-    foo.parallel = true;
-    return foo.read(reader);
+    comservatory::ReadOptions opt;
+    opt.parallel = true;
+    return comservatory::read(reader, opt);
 }
 
 inline comservatory::Contents load_path(std::string path) {
-    return comservatory::ReadCsv().read(path);
+    return comservatory::read_file(path, comservatory::ReadOptions());
 }
 
 template<class Reader>
 comservatory::Contents load_subset(Reader& reader, std::vector<std::string> subset_names, std::vector<int> subset_indices) {
-    comservatory::ReadCsv foo;
-    foo.keep_subset = true;
-    foo.keep_subset_names = std::move(subset_names);
-    foo.keep_subset_indices = std::move(subset_indices);
-    return foo.read(reader);
+    comservatory::ReadOptions opt;
+    opt.keep_subset = true;
+    opt.keep_subset_names = std::move(subset_names);
+    opt.keep_subset_indices = std::move(subset_indices);
+    return comservatory::read(reader, opt);
 }
 
-inline comservatory::Contents load_path_subset(std::string path, std::vector<std::string> subset_names, std::vector<int> subset_indices) {
-    comservatory::ReadCsv foo;
-    foo.keep_subset = true;
-    foo.keep_subset_names = std::move(subset_names);
-    foo.keep_subset_indices = std::move(subset_indices);
-    return foo.read(path.c_str());
+inline comservatory::Contents load_path_subset(const std::string& path, std::vector<std::string> subset_names, std::vector<int> subset_indices) {
+    comservatory::ReadOptions opt;
+    opt.keep_subset = true;
+    opt.keep_subset_names = std::move(subset_names);
+    opt.keep_subset_indices = std::move(subset_indices);
+    return comservatory::read_file(path.c_str(), opt);
 }
 
-inline comservatory::Contents validate_path(std::string path) {
-    comservatory::ReadCsv foo;
-    foo.validate_only = true;
-    return foo.read(path);
+inline comservatory::Contents validate_path(const std::string& path) {
+    comservatory::ReadOptions opt;
+    opt.validate_only = true;
+    return comservatory::read_file(path, opt);
 }
 
 inline void parse_fail(const std::string& x, const std::string& msg) {
     byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
-    comservatory::ReadCsv parser;
 
     EXPECT_ANY_THROW({
         try {
-            parser.read(reader);
+            comservatory::read(reader, comservatory::ReadOptions());
         } catch (std::exception& e) {
             EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr(msg));
             throw;

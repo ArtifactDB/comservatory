@@ -235,12 +235,12 @@ TEST(LoadTest, ParallelFailures) {
     std::string x = "\"aaron\",\"britney\",\"aaron\"\n1,2,3\n";
     byteme::ChunkedBufferReader reader(raw_bytes(x), x.size(), 10);
 
-    comservatory::ReadCsv parser;
-    parser.parallel = true;
+    comservatory::ReadOptions opt;
+    opt.parallel = true;
 
     EXPECT_ANY_THROW({
         try {
-            parser.read(reader);
+            comservatory::read(reader, opt);
         } catch (std::exception& e) {
             EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("duplicated header"));
             throw;
@@ -250,13 +250,13 @@ TEST(LoadTest, ParallelFailures) {
 
 TEST(LoadTest, CustomCreator) {
     comservatory::DefaultFieldCreator<true> validator;
-    comservatory::ReadCsv foo;
-    foo.creator = &validator;
+    comservatory::ReadOptions opt;
+    opt.creator = &validator;
 
     std::string x = "\"aaron\",\"britney\",\"chuck\",\"darth\"\n123,4.5e3+2.1i,\"asdasd\",TRUE\n23.01,-1-4i,\"\",false\n";
     byteme::RawBufferReader reader(raw_bytes(x), x.size());
 
-    auto output = foo.read(reader);
+    auto output = comservatory::read(reader, opt);
     EXPECT_EQ(output.names[0], "aaron");
     EXPECT_EQ(output.names[1], "britney");
     EXPECT_EQ(output.names[2], "chuck");

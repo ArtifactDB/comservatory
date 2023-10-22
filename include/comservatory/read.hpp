@@ -3,13 +3,14 @@
 
 #include <vector>
 #include <string>
-#include "FieldCreator.hpp"
+#include "Creator.hpp"
 #include "Parser.hpp"
+#include "byteme/byteme.hpp"
 
 /**
  * @file read.hpp
  *
- * @brief Implements user-visible functions for reading a CSV file.
+ * @brief Read a CSV file.
  */
 
 namespace comservatory {
@@ -25,7 +26,8 @@ struct ReadOptions {
 
     /**
      * Whether to only validate the CSV structure, not store any of the data in memory.
-     * If `true`, all settings of `creator`, `keep_subset`, `keep_subset_names` and `keep_subset_indices` are ignored.
+     * If `true`, all fields in the output `Contents` are represented by dummy placeholders,
+     * and all settings of `creator`, `keep_subset`, `keep_subset_names` and `keep_subset_indices` are ignored.
      */
     bool validate_only = false;
 
@@ -37,6 +39,8 @@ struct ReadOptions {
 
     /**
      * Whether to keep only a subset of fields.
+     * If `true`, data is only loaded for the fields specified in `keep_subset_names` or `keep_subset_indices`,
+     * and all other fields are represented by dummy placeholders in the output `Contents`.
      * If `false`, `keep_subset_names` and `keep_subset_indices` are ignored.
      */
     bool keep_subset = false;
@@ -62,19 +66,14 @@ struct ReadOptions {
  */
 namespace internals {
 
-template<class Reader>
-Contents read(Reader& reader, const FieldCreator* creator) const {    
+inline Parser configure_parser(const FieldCreator* creator, const ReadOptions& options) {
     Parser parser(creator);
-
-    if (keep_subset) {
+    if (options.keep_subset) {
         parser.set_check_store(true);
-        parser.set_store_by_name(keep_subset_names);
-        parser.set_store_by_index(keep_subset_indices);
+        parser.set_store_by_name(options.keep_subset_names);
+        parser.set_store_by_index(options.keep_subset_indices);
     }
-
-    Contents output;
-    parser.parse(reader, output, parallel);
-    return output;
+    return parser;
 }
 
 }
@@ -86,52 +85,95 @@ Contents read(Reader& reader, const FieldCreator* creator) const {
  * @tparam Reader A reader class that implements the same methods as `bytme::Reader`.
  *
  * @param reader Instance of a `Reader` class, containing the data stream for a CSV file.
- *
- * @return The `Contents` of the CSV file.
- *
- * If `keep_subset` is `true`, data is only loaded for the fields specified in `keep_subset_names` or `keep_subset_indices`;
- * all other fields are represented by dummy placeholders.
- *
- * If `validate_only` is `true`, all fields are represented by dummy placeholders.
+ * @param contents `Contents` to store the parsed contents of the file.
+ * This can contain pre-filled `Contents::names`, which will be checked against the header names in the file.
+ * This can also contain pre-filled `Contents::fields`, which will be directly used for storing data from each column.
+ * @param options Reading options.
  */
 template<class Reader>
-Contents read(Reader& reader) const {
-    if (validate_only) {
+void read(Reader& reader, Contents& contents, const ReadOptions& options) {
+    if (options.validate_only) {
         DefaultFieldCreator<true> creator;
-        return internals::read(reader, &creator);
-    } else if (creator) {
-        return internals::read(reader, creator);
+        auto parser = internals::configure_parser(&creator, options);
+        parser.parse(reader, contents, options.parallel);
+    } else if (options.creator) {
+        auto parser = internals::configure_parser(options.creator, options);
+        parser.parse(reader, contents, options.parallel);
     } else {
         DefaultFieldCreator<false> creator;
-        return internals::read(reader, &creator);
+        auto parser = internals::configure_parser(&creator, options);
+        parser.parse(reader, contents, options.parallel);
     }
 }
 
 /**
- * @param path Path to a (possibly Gzipped) CSV file.
+ * @tparam Reader A reader class that implements the same methods as `bytme::Reader`.
+ *
+ * @param reader Instance of a `Reader` class, containing the data stream for a CSV file.
+ * @param options Reading options.
  *
  * @return The `Contents` of the CSV file.
+ */
+template<class Reader>
+Contents read(Reader& reader, const ReadOptions& options) {
+    Contents output;
+    read(reader, output, options);
+    return output;
+}
+
+/**
+ * @param path Path to a (possibly Gzipped) CSV file.
+ * @param contents `Contents` to store the parsed contents of the file, see the `read()` overload for details.
+ * @param options Reading options.
  *
  * Gzip support requires linking to the Zlib library.
  */
-Contents read(const char* path) const {
+inline void read_file(const char* path, Contents& contents, const ReadOptions& options) {
 #if __has_include("zlib.h")
     byteme::SomeFileReader reader(path);
 #else
     byteme::RawFileReader reader(path);
 #endif
-    return read(reader);
+    read(reader, contents, options);
 } 
 
 /**
  * @param path Path to a (possibly Gzipped) CSV file.
+ * @param options Reading options.
  *
  * @return The `Contents` of the CSV file.
  *
  * Gzip support requires linking to the Zlib library.
  */
-Contents read(const std::string& path) const {
-    return read(path.c_str());
+inline Contents read_file(const char* path, const ReadOptions& options) {
+    Contents output;
+    read_file(path, output, options);
+    return output;
+} 
+
+/**
+ * @param path Path to a (possibly Gzipped) CSV file.
+ * @param contents `Contents` to store the parsed contents of the file, see the `read()` overload for details.
+ * @param options Reading options.
+ *
+ * @return The `Contents` of the CSV file.
+ *
+ * Gzip support requires linking to the Zlib library.
+ */
+inline void read_file(const std::string& path, Contents& contents, const ReadOptions& options) {
+    read_file(path.c_str(), contents, options);
+} 
+
+/**
+ * @param path Path to a (possibly Gzipped) CSV file.
+ * @param options Reading options.
+ *
+ * @return The `Contents` of the CSV file.
+ *
+ * Gzip support requires linking to the Zlib library.
+ */
+inline Contents read_file(const std::string& path, const ReadOptions& options) {
+    return read_file(path.c_str(), options);
 } 
 
 }

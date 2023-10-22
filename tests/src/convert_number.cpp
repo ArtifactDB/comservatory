@@ -2,16 +2,15 @@
 #include <gmock/gmock.h>
 
 #include "byteme/RawBufferReader.hpp"
-#include "comservatory/ReadCsv.hpp"
+#include "comservatory/read.hpp"
 
 #include "utils.h"
 
 double convert_to_number(std::string x) {
     x = "\"foo\"\n" + x + "\n";
     byteme::RawBufferReader reader(reinterpret_cast<const unsigned char*>(x.c_str()), x.size());
-    comservatory::ReadCsv parser;
 
-    auto output = parser.read(reader);
+    auto output = comservatory::read(reader, comservatory::ReadOptions());
     EXPECT_EQ(output.fields.size(), 1);
     EXPECT_EQ(output.fields[0]->type(), comservatory::NUMBER);
 
