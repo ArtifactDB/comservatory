@@ -41,7 +41,11 @@ inline comservatory::Contents load_path_subset(const std::string& path, std::vec
     opt.keep_subset = true;
     opt.keep_subset_names = std::move(subset_names);
     opt.keep_subset_indices = std::move(subset_indices);
-    return comservatory::read_file(path.c_str(), opt);
+
+    // We could just return read_file directly, but we'll get some coverage on the overload...
+    comservatory::Contents contents;
+    comservatory::read_file(path.c_str(), contents, opt);
+    return contents;
 }
 
 inline comservatory::Contents validate_path(const std::string& path) {
