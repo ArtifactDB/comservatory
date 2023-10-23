@@ -1,6 +1,4 @@
 <map id="comservatory/Creator.hpp" name="comservatory/Creator.hpp">
-<area shape="rect" id="node1" title="Defines the FieldCreator class and defaults." alt="" coords="23,5,194,31"/>
-<area shape="rect" id="node2" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="25,79,192,104"/>
-<area shape="rect" id="node3" href="$ReadCsv_8hpp.html" title="Backwards compatibility only, use read() instead." alt="" coords="18,152,199,177"/>
-<area shape="rect" id="node4" href="$comservatory_8hpp.html" title="Entrypoint header for the comservatory library." alt="" coords="5,225,212,251"/>
+<area shape="rect" id="node1" title="Defines the FieldCreator class and defaults." alt="" coords="5,5,176,31"/>
+<area shape="rect" id="node2" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="7,79,174,104"/>
 </map>

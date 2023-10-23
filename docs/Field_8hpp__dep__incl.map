@@ -1,7 +1,5 @@
 <map id="comservatory/Field.hpp" name="comservatory/Field.hpp">
-<area shape="rect" id="node1" title="Defines the Field virtual class and concrete implementations." alt="" coords="135,5,291,31"/>
+<area shape="rect" id="node1" title="Defines the Field virtual class and concrete implementations." alt="" coords="74,5,230,31"/>
 <area shape="rect" id="node2" href="$Creator_8hpp.html" title="Defines the FieldCreator class and defaults." alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node3" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="59,152,226,177"/>
-<area shape="rect" id="node4" href="$ReadCsv_8hpp.html" title="Backwards compatibility only, use read() instead." alt="" coords="112,225,293,251"/>
-<area shape="rect" id="node5" href="$comservatory_8hpp.html" title="Entrypoint header for the comservatory library." alt="" coords="99,299,306,324"/>
+<area shape="rect" id="node3" href="$Parser_8hpp.html" title="Defines the Contents class for storing the CSV contents." alt="" coords="69,152,235,177"/>
 </map>
