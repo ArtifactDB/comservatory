@@ -127,7 +127,7 @@ TEST(LoadTest, MultiChunk) {
     EXPECT_EQ(ptr2->values, expected2);
 
     comservatory::FilledBooleanField * ptr3 = static_cast<comservatory::FilledBooleanField*>(out.fields[2].get());
-    std::vector<char> expected3{ 1, 1 };
+    std::vector<bool> expected3{ 1, 1 };
     EXPECT_EQ(ptr3->values, expected3);
 }
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(comservatory
-    VERSION 1.1.0
+    VERSION 2.0.0
     DESCRIPTION "C++ library for strictly validating and loading CSV files"
     LANGUAGES CXX)
 
