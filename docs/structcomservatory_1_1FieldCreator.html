@@ -138,8 +138,8 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">t</td><td>Type of the field. </td></tr>
-    <tr><td class="paramname">n</td><td>Number of existing (missing) records in the field. </td></tr>
-    <tr><td class="paramname">dummy</td><td>Whether to create a dummy field.</td></tr>
+    <tr><td class="paramname">n</td><td>Number of existing (missing) records in the field. This should be used to specify that the first <code>n</code> values of the field's contents are missing. </td></tr>
+    <tr><td class="paramname">dummy</td><td>Whether to create a dummy field. This is used to create placeholders for fields that are not of interest when <code>ReadOptions::keep_subset</code> is set, i.e., not in <code>ReadOptions::keep_subset_names</code> or <code>ReadOptions::keep_subset_indices</code>.</td></tr>
   </table>
   </dd>
 </dl>
