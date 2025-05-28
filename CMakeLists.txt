@@ -17,7 +17,7 @@ option(COMSERVATORY_FETCH_EXTERN "Automatically fetch comservatory's external de
 if(COMSERVATORY_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(ltla_byteme CONFIG REQUIRED)
+    find_package(ltla_byteme 2.0.0 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(comservatory INTERFACE ltla::byteme)

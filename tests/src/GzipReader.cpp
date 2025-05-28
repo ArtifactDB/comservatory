@@ -4,7 +4,7 @@
 #include <string>
 
 #include "utils.h"
-#include "byteme/temp_file_path.hpp"
+#include "temp_file_path.h"
 #include "compare_contents.h"
 
 #include "byteme/RawBufferReader.hpp"
@@ -27,7 +27,7 @@ TEST(GzipReaderTest, Simple) {
     byteme::RawBufferReader buf(raw_bytes(x), x.size());
     auto ref = load_simple(buf);
 
-    auto path = byteme::temp_file_path("comservatory-test", ".csv.gz");
+    auto path = temp_file_path("comservatory-test");
     write_csv_gzip(path, x);
     auto out = load_path(path);
     compare_contents(ref, out);
@@ -53,9 +53,12 @@ TEST(GzipReaderTest, SmallerChunks) {
     byteme::RawBufferReader buf(raw_bytes(x), x.size());
     auto ref = load_simple(buf);
         
-    auto path = byteme::temp_file_path("comservatory-chunk", ".csv.gz");
+    auto path = temp_file_path("comservatory-chunk");
     write_csv_gzip(path, x);
-    byteme::GzipFileReader txt(path.c_str(), 9);
+
+    byteme::GzipFileReader opt;
+    opt.buffer_size = 9;
+    byteme::GzipFileReader txt(path.c_str(), opt);
     auto out = load_simple(txt);
 
     compare_contents(ref, out);

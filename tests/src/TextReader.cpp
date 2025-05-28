@@ -3,7 +3,7 @@
 
 #include "byteme/RawBufferReader.hpp"
 #include "byteme/RawFileReader.hpp"
-#include "byteme/temp_file_path.hpp"
+#include "temp_file_path.h"
 
 #include "utils.h"
 #include "compare_contents.h"
@@ -26,7 +26,7 @@ TEST(TextReaderTest, Simple) {
     byteme::RawBufferReader buf(raw_bytes(x), x.size());
     auto ref = load_simple(buf);
 
-    auto path = byteme::temp_file_path("comservatory-test", ".csv");
+    auto path = temp_file_path("comservatory-test");
     write_csv(path, x);
     auto out = load_path(path);
     compare_contents(ref, out);
@@ -52,9 +52,12 @@ TEST(TextReaderTest, SmallerChunks) {
     byteme::RawBufferReader buf(raw_bytes(x), x.size());
     auto ref = load_simple(buf);
         
-    auto path = byteme::temp_file_path("comservatory-chunk", ".csv");
+    auto path = temp_file_path("comservatory-chunk");
     write_csv(path, x);
-    byteme::RawFileReader txt(path.c_str(), 9);
+
+    byteme::RawFileReaderOptions opt;
+    opt.buffer_size = 9;
+    byteme::RawFileReader txt(path.c_str(), opt);
     auto out = load_simple(txt);
 
     compare_contents(ref, out);
