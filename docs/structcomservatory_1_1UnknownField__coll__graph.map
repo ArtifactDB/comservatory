@@ -1,4 +1,5 @@
 <map id="comservatory::UnknownField" name="comservatory::UnknownField">
-<area shape="rect" id="node1" title="Field of an unknown type." alt="" coords="5,79,195,104"/>
-<area shape="rect" id="node2" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="33,5,167,31"/>
+<area shape="rect" id="Node000001" title="Field of an unknown type." alt="" coords="5,79,194,105"/>
+<area shape="rect" id="Node000002" href="$structcomservatory_1_1Field.html" title="Virtual base class for a describing a field." alt="" coords="33,5,166,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,46,102,79,97,79,97,46"/>
 </map>

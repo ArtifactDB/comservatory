@@ -5,5 +5,6 @@ var searchData=
   ['comservatory_2ehpp_2',['comservatory.hpp',['../comservatory_8hpp.html',1,'']]],
   ['contents_3',['Contents',['../structcomservatory_1_1Contents.html',1,'comservatory']]],
   ['create_4',['create',['../structcomservatory_1_1FieldCreator.html#a4b025ff599221bdc7084666ab649914a',1,'comservatory::FieldCreator']]],
-  ['creator_2ehpp_5',['Creator.hpp',['../Creator_8hpp.html',1,'']]]
+  ['creator_2ehpp_5',['Creator.hpp',['../Creator_8hpp.html',1,'']]],
+  ['csv_20validation_20and_20loading_6',['Strict CSV validation and loading',['../index.html',1,'']]]
 ];
