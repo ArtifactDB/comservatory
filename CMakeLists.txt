@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(comservatory
-    VERSION 2.0.1
+    VERSION 2.0.2
     DESCRIPTION "C++ library for strictly validating and loading CSV files"
     LANGUAGES CXX)
 
@@ -54,5 +54,10 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/artifactdb_comservatoryConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/artifactdb_comservatory)
 
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/artifactdb_comservatoryConfigVersion.cmake"
+    COMPATIBILITY SameMajorVersion)
+
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/artifactdb_comservatoryConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/artifactdb_comservatoryConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/artifactdb_comservatory)
