@@ -108,7 +108,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="Field_8hpp.html">Field.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="Creator_8hpp.html">Creator.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;byteme/PerByte.hpp&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;byteme/byteme.hpp&quot;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecomservatory.html">comservatory</a> {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
@@ -491,11 +491,11 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Reader&gt;</div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keywordtype">void</span> parse(Reader&amp; reader, Contents&amp; info, <span class="keywordtype">bool</span> parallel)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>        std::unique_ptr&lt;byteme::PerByteInterface&lt;char&gt; &gt; pb;</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>        std::unique_ptr&lt;byteme::BufferedReader&lt;char&gt; &gt; pb;</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>        <span class="keywordflow">if</span> (parallel) {</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>            pb.reset(<span class="keyword">new</span> byteme::PerByteSerial&lt;char, byteme::Reader*&gt;(&amp;reader));</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>            pb.reset(<span class="keyword">new</span> byteme::SerialBufferedReader&lt;char, byteme::Reader*&gt;(&amp;reader, 65536));</div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>            pb.reset(<span class="keyword">new</span> byteme::PerByteParallel&lt;char, byteme::Reader*&gt;(&amp;reader));</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>            pb.reset(<span class="keyword">new</span> byteme::ParallelBufferedReader&lt;char, byteme::Reader*&gt;(&amp;reader, 65536));</div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>        }</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>        parse_loop(*pb, info);</div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    }</div>
