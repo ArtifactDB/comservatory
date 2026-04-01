@@ -108,29 +108,6 @@ TEST(LoadTest, DifficultNumbers) {
     EXPECT_TRUE(std::isinf(ptr2->values[3]));
 }
 
-TEST(LoadTest, MultiChunk) {
-    std::string x = "\"aaron\nlun\",\"britney,spears\",\"darth \"\"vader\"\"\"\n\"sdasd\",2e34,TRUE\n\"ccscs\",56.6,true\n";
-    byteme::RawBufferReader reader(raw_bytes(x), x.size());
-    auto ref = load_simple(reader);
-
-    byteme::ChunkedBufferReader reader2(raw_bytes(x), x.size(), 10);
-    auto out = load_simple(reader2);
-    compare_contents(ref, out);
-
-    // Might as well check manually, while I'm here.
-    comservatory::FilledStringField * ptr1 = static_cast<comservatory::FilledStringField*>(out.fields[0].get());
-    std::vector<std::string> expected1{ "sdasd", "ccscs" };
-    EXPECT_EQ(ptr1->values, expected1);
-
-    comservatory::FilledNumberField * ptr2 = static_cast<comservatory::FilledNumberField*>(out.fields[1].get());
-    std::vector<double> expected2{ 2e34, 56.6 };
-    EXPECT_EQ(ptr2->values, expected2);
-
-    comservatory::FilledBooleanField * ptr3 = static_cast<comservatory::FilledBooleanField*>(out.fields[2].get());
-    std::vector<bool> expected3{ 1, 1 };
-    EXPECT_EQ(ptr3->values, expected3);
-}
-
 TEST(LoadTest, Parallelized) {
     std::string x = "\"aaron\nlun\",\"britney,spears\",\"darth \"\"vader\"\"\"\n\"sdasd\",2e34,TRUE\n\"ccscs\",56.6,true\n";
 
@@ -140,11 +117,6 @@ TEST(LoadTest, Parallelized) {
     byteme::RawBufferReader reader2(raw_bytes(x), x.size());
     auto par = load_parallel(reader2);
     compare_contents(ref, par);
-
-    // Need small chunks for the parallelization to do something meaningful.
-    byteme::ChunkedBufferReader reader3(raw_bytes(x), x.size(), 10);
-    auto out = load_parallel(reader3);
-    compare_contents(ref, out);
 }
 
 TEST(LoadTest, OneColumn) {
@@ -229,23 +201,6 @@ TEST(LoadTest, Failures) {
 
     parse_fail("", "CSV file is empty");
     parse_fail("\n1\n", "more fields on line 2");
-}
-
-TEST(LoadTest, ParallelFailures) {
-    std::string x = "\"aaron\",\"britney\",\"aaron\"\n1,2,3\n";
-    byteme::ChunkedBufferReader reader(raw_bytes(x), x.size(), 10);
-
-    comservatory::ReadOptions opt;
-    opt.parallel = true;
-
-    EXPECT_ANY_THROW({
-        try {
-            comservatory::read(reader, opt);
-        } catch (std::exception& e) {
-            EXPECT_THAT(std::string(e.what()), ::testing::HasSubstr("duplicated header"));
-            throw;
-        }
-    });
 }
 
 TEST(LoadTest, CustomCreator) {

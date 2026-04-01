@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 project(comservatory
-    VERSION 2.0.2
+    VERSION 2.1.0
     DESCRIPTION "C++ library for strictly validating and loading CSV files"
     LANGUAGES CXX)
 
@@ -17,7 +17,7 @@ option(COMSERVATORY_FETCH_EXTERN "Automatically fetch comservatory's external de
 if(COMSERVATORY_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(ltla_byteme 2.0.0 CONFIG REQUIRED)
+    find_package(ltla_byteme 2.1.3 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(comservatory INTERFACE ltla::byteme)
